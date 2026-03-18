@@ -1,98 +1,337 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}About Us{% endblock title %}
 
-{% block main-content %}
-<main role="main">
-    <!--Main Jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-        <div class="container">
-            <h5 class="display-4"><b>About Us</b></h5><br>
-            <p><h4><b>Welcome to Coffee Shop</b></h4><br>
-                At Coffee Shop, we celebrate the rich heritage and exquisite flavors of one of the world's most beloved coffees. Our journey began with a simple yet ambitious dream – to bring the authentic taste of Coffee to lovers everywhere.
-                <h4><b>Our Story</b></h4>
-                Coffee Shop was founded in [2025] by [Navanath latake], a passionated drink enthusiast with a deep love for traditional Indian cuisine. Inspired by the diverse regional variations of Coffees, we set out to create a dining experience that captures the essence of this iconic drink.
-                <h4><b>Our Mission</b></h4>
-                Our mission is the youth and the young at heart immediately took to the cafe, and it continues to be one of the most happening places in the city. CCD to the youth is a “hangout” spot where they meet people, make conversations, and have a whole lot of fun over steaming cups of great coffee.It's been an exciting journey since then to becoming the largest organised retail cafe chain in the country.
-                <h4><b>Our Values</b></h4>
-                <ul>
-                    <li>
-                        <b>Authenticity:</b>We honor traditional recipes and cooking techniques to deliver a genuine Coffee experience.
-                    </li>
-                    <li>
-                        <b>Quality:</b>We source the freshest ingredients and the finest taste to ensure every zip is flavorful and satisfying.
-                    </li>
-                    <li>
-                        <b>Community: </b>We believe in creating a warm, welcoming environment where everyone can enjoy the shared experience of good shop.
-                    </li>
-                    <li>
-                        <b>Innovation:</b>While we cherish tradition, we also embrace innovation to keep our menu exciting and dynamic.
-                    </li>
-                </ul>
-                <h4><b>What Sets Us Apart</b></h4>
-               
-                <h4><b>Join Us</b></h4>
-                We invite you to join us at Coffee Shop and embark on a culinary adventure. Whether you're a lifelong fan of Coffee or trying it for the first time, we promise a memorable sitting experience that will leave you craving more.
-            </p>
-        </div>
-    </div>
-</main>
-<footer class="bd-footer py-4 py-md-5 mt-5 bg-body-tertiary">
-    <div class="container">
-        <h6 class="align-text=center">You must visit the nearest branch of My Coffee Shop.</h6><br>
-    </div>
-    <div class="container py-4 py-md-5 px-4 px-md-3 text-body-secondary">
-    <div class="row">
-        <div class="col-lg-3 mb-3">
-        <h4>My Coffee Shop</h4>
-          <ul>
-            <li class="mb-2"><a href="/">Mumbai</a></li>
-            <li class="mb-2"><a href="/">Navi Mumbai</a></li>
-            <li class="mb-2"><a href="/">Pune</a></li>
-            <li class="mb-2"><a href="/">Pimpri-Chinchwad</a></li>
-          </ul>
-        </div>
-        <div class="col-6 col-lg-2 offset-lg-1 mb-3">
-          <h5>Links</h5>
-          <ul class="list-unstyled">
-            <li class="mb-2"><a href="/">Home</a></li>
-            <li class="mb-2"><a href="/about">About Us</a></li>
-            <li class="mb-2"><a href="/services">Services</a></li>
-            <li class="mb-2"><a href="/contact">Contact Us</a></li>
-            <li class="mb-2"><a href="/">Blog</a></li>
-          </ul>
-        </div>
-        <div class="col-6 col-lg-2 mb-3">
-          <h5>Guides</h5>
-          <ul class="list-unstyled">
-            <li class="mb-2"><a href="/docs/5.3/getting-started/">Getting started</a></li>
-            <li class="mb-2"><a href="/docs/5.3/examples/starter-template/">Starter template</a></li>
-            <li class="mb-2"><a href="/docs/5.3/getting-started/webpack/">Webpack</a></li>
-            <li class="mb-2"><a href="/docs/5.3/getting-started/parcel/">Parcel</a></li>
-            <li class="mb-2"><a href="/docs/5.3/getting-started/vite/">Vite</a></li>
-          </ul>
-        </div>
-        <div class="col-6 col-lg-2 mb-3">
-          <h5>Projects</h5>
-          <ul class="list-unstyled">
-            <li class="mb-2"><a href="https://github.com/twbs/bootstrap" target="_blank" rel="noopener">Bootstrap 5</a></li>
-            <li class="mb-2"><a href="https://github.com/twbs/bootstrap/tree/v4-dev" target="_blank" rel="noopener">Bootstrap 4</a></li>
-            <li class="mb-2"><a href="https://github.com/twbs/icons" target="_blank" rel="noopener">Icons</a></li>
-            <li class="mb-2"><a href="https://github.com/twbs/rfs" target="_blank" rel="noopener">RFS</a></li>
-            <li class="mb-2"><a href="https://github.com/twbs/examples/" target="_blank" rel="noopener">Examples repo</a></li>
-          </ul>
-        </div>
-        <div class="col-6 col-lg-2 mb-3">
-          <h5>Community</h5>
-          <ul class="list-unstyled">
-            <li class="mb-2"><a href="https://github.com/twbs/bootstrap/issues" target="_blank" rel="noopener">Issues</a></li>
-            <li class="mb-2"><a href="https://github.com/twbs/bootstrap/discussions" target="_blank" rel="noopener">Discussions</a></li>
-            <li class="mb-2"><a href="https://github.com/sponsors/twbs" target="_blank" rel="noopener">Corporate sponsors</a></li>
-            <li class="mb-2"><a href="https://opencollective.com/bootstrap" target="_blank" rel="noopener">Open Collective</a></li>
-            <li class="mb-2"><a href="https://stackoverflow.com/questions/tagged/bootstrap-5" target="_blank" rel="noopener">Stack Overflow</a></li>
-          </ul>
+{% block head %}
+<style>
+  /* Hero */
+  .about-hero {
+    background: linear-gradient(135deg, #1a0a00 0%, #3b1f0c 100%);
+    padding: 70px 0 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 25% 50%, rgba(192,121,64,.13) 0%, transparent 55%),
+                radial-gradient(circle at 75% 50%, rgba(107,58,42,.13) 0%, transparent 55%);
+  }
+  .about-hero .eyebrow {
+    font-size: .75rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: #c07940;
+    font-weight: 700;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .about-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    color: #f5ead8;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .about-hero p {
+    color: rgba(245,234,216,.6);
+    font-style: italic;
+    position: relative;
+    margin: 0;
+  }
+
+  /* Main Content */
+  .about-section { padding: 64px 0 80px; }
+
+  /* Intro Card */
+  .intro-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(60,20,10,.1);
+    padding: 40px 44px;
+    margin-bottom: 40px;
+    border-left: 5px solid #c07940;
+    animation: fadeUp .55s ease forwards;
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+
+  .intro-card p {
+    font-size: 1.05rem;
+    color: #5a3d2b;
+    line-height: 1.85;
+    margin: 0;
+  }
+
+  /* Section Blocks */
+  .about-block {
+    margin-bottom: 36px;
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp .55s ease forwards;
+  }
+  .about-block:nth-child(2) { animation-delay: .1s; }
+  .about-block:nth-child(3) { animation-delay: .2s; }
+  .about-block:nth-child(4) { animation-delay: .3s; }
+  .about-block:nth-child(5) { animation-delay: .4s; }
+
+  .about-block h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: #3b1f0c;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .about-block h4 i { color: #c07940; font-size: 1.1rem; }
+
+  .about-block p {
+    font-size: .95rem;
+    color: #5a3d2b;
+    line-height: 1.8;
+    margin: 0;
+  }
+
+  /* Values List */
+  .values-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  .values-list li {
+    background: #fdf6ec;
+    border: 1px solid rgba(192,121,64,.2);
+    border-left: 4px solid #c07940;
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+
+  .values-list li strong {
+    display: block;
+    color: #3b1f0c;
+    font-size: .92rem;
+    margin-bottom: 5px;
+    font-weight: 700;
+  }
+
+  .values-list li span {
+    font-size: .84rem;
+    color: #7a5c48;
+    line-height: 1.6;
+  }
+
+  /* Branches Panel */
+  .branches-panel {
+    background: linear-gradient(135deg, #3b1f0c, #6b3a2a);
+    border-radius: 16px;
+    padding: 40px 44px;
+    margin-top: 48px;
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp .55s ease .45s forwards;
+  }
+
+  .branches-panel h4 {
+    font-family: 'Playfair Display', serif;
+    color: #f5ead8;
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+  }
+
+  .branches-panel .sub {
+    color: rgba(245,234,216,.6);
+    font-size: .88rem;
+    font-style: italic;
+    margin-bottom: 28px;
+  }
+
+  .branch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+  }
+
+  .branch-item {
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(212,160,85,.2);
+    border-radius: 10px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #f5ead8;
+    font-size: .9rem;
+    font-weight: 600;
+    transition: background .3s ease;
+  }
+
+  .branch-item:hover { background: rgba(192,121,64,.15); }
+  .branch-item i { color: #c07940; }
+
+  /* Quick Links */
+  .quick-links {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(60,20,10,.1);
+    padding: 28px 32px;
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp .55s ease .5s forwards;
+  }
+
+  .quick-links h5 {
+    font-family: 'Playfair Display', serif;
+    color: #3b1f0c;
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(192,121,64,.2);
+  }
+
+  .quick-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .quick-links ul li {
+    margin-bottom: 8px;
+  }
+
+  .quick-links ul li a {
+    color: #6b3a2a;
+    font-size: .88rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color .3s ease, padding-left .3s ease;
+  }
+
+  .quick-links ul li a i { color: #c07940; font-size: .7rem; }
+  .quick-links ul li a:hover { color: #c07940; padding-left: 4px; }
+</style>
+{% endblock head %}
+
+{% block body %}
+
+<!-- Hero -->
+<div class="about-hero">
+  <div class="eyebrow">Our Story</div>
+  <h1>About Us</h1>
+  <p>Passion brewed into every single cup</p>
+</div>
+
+<div class="container about-section">
+  <div class="row g-5">
+
+    <!-- Main Content -->
+    <div class="col-lg-8">
+
+      <!-- Welcome -->
+      <div class="intro-card">
+        <p>Welcome to <strong>Navanath's Coffee Shop</strong> — where we celebrate the rich heritage and exquisite flavours of one of the world's most beloved beverages. Our journey began with a simple yet ambitious dream: to bring the authentic taste of great coffee to lovers everywhere.</p>
+      </div>
+
+      <!-- Story -->
+      <div class="about-block">
+        <h4><i class="fas fa-book-open"></i> Our Story</h4>
+        <p>Navanath's Coffee Shop was founded in 2025 by Navanath Latake, a passionate drink enthusiast with a deep love for traditional Indian coffee culture. Inspired by the diverse regional variations of coffee, we set out to create a dining experience that truly captures the essence of this iconic drink. The youth and young at heart immediately took to the café — it continues to be one of the most happening places in the city.</p>
+      </div>
+
+      <!-- Mission -->
+      <div class="about-block">
+        <h4><i class="fas fa-bullseye"></i> Our Mission</h4>
+        <p>Our mission is to be a "hangout" spot where people meet, make conversations, and have a whole lot of fun over steaming cups of great coffee. We strive to become the most loved coffee destination in the region — a space where every cup tells a story and every visit creates a memory.</p>
+      </div>
+
+      <!-- Values -->
+      <div class="about-block">
+        <h4><i class="fas fa-heart"></i> Our Values</h4>
+        <ul class="values-list mt-3">
+          <li>
+            <strong><i class="fas fa-leaf" style="color:#c07940;margin-right:6px"></i>Authenticity</strong>
+            <span>We honour traditional recipes and techniques to deliver a genuine coffee experience.</span>
+          </li>
+          <li>
+            <strong><i class="fas fa-star" style="color:#c07940;margin-right:6px"></i>Quality</strong>
+            <span>We source the freshest ingredients and finest beans so every sip is flavorful and satisfying.</span>
+          </li>
+          <li>
+            <strong><i class="fas fa-users" style="color:#c07940;margin-right:6px"></i>Community</strong>
+            <span>We believe in creating a warm, welcoming environment where everyone belongs.</span>
+          </li>
+          <li>
+            <strong><i class="fas fa-lightbulb" style="color:#c07940;margin-right:6px"></i>Innovation</strong>
+            <span>While we cherish tradition, we also embrace innovation to keep our menu exciting and dynamic.</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Join Us -->
+      <div class="about-block">
+        <h4><i class="fas fa-mug-hot"></i> Join Us</h4>
+        <p>We invite you to join us at Navanath's Coffee Shop and embark on a flavourful adventure. Whether you're a lifelong coffee lover or trying it for the first time, we promise a memorable experience that will leave you craving more.</p>
+      </div>
+
+      <!-- Branches -->
+      <div class="branches-panel">
+        <h4><i class="fas fa-map-marker-alt me-2" style="color:#c07940"></i>Visit Our Branches</h4>
+        <p class="sub">Find us across Maharashtra — a great cup is always nearby.</p>
+        <div class="branch-grid">
+          <div class="branch-item"><i class="fas fa-store"></i> Mumbai</div>
+          <div class="branch-item"><i class="fas fa-store"></i> Navi Mumbai</div>
+          <div class="branch-item"><i class="fas fa-store"></i> Pune</div>
+          <div class="branch-item"><i class="fas fa-store"></i> Pimpri-Chinchwad</div>
         </div>
       </div>
+
     </div>
-  </footer>
-{% endblock main-content %}
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+      <div class="quick-links" style="position:sticky;top:90px;">
+        <h5><i class="fas fa-link me-2" style="color:#c07940"></i>Quick Links</h5>
+        <ul>
+          <li><a href="/"><i class="fas fa-chevron-right"></i> Home</a></li>
+          <li><a href="/about"><i class="fas fa-chevron-right"></i> About Us</a></li>
+          <li><a href="/services"><i class="fas fa-chevron-right"></i> Our Menu</a></li>
+          <li><a href="/contact"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+        </ul>
+
+        <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(192,121,64,.15);">
+          <div style="font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#c07940;font-weight:700;margin-bottom:14px;">Opening Hours</div>
+          <div style="font-size:.87rem;color:#5a3d2b;line-height:2.2;">
+            <div><i class="fas fa-sun me-2" style="color:#c07940"></i>Mon – Fri: 7:00 AM – 10:00 PM</div>
+            <div><i class="fas fa-moon me-2" style="color:#c07940"></i>Sat – Sun: 8:00 AM – 11:00 PM</div>
+          </div>
+        </div>
+
+        <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(192,121,64,.15);">
+          <div style="font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:#c07940;font-weight:700;margin-bottom:14px;">Get In Touch</div>
+          <div style="font-size:.87rem;color:#5a3d2b;line-height:2.2;">
+            <div><i class="fas fa-phone me-2" style="color:#c07940"></i>+91 98765 43210</div>
+            <div><i class="fas fa-envelope me-2" style="color:#c07940"></i>hello@navanathscoffee.in</div>
+          </div>
+        </div>
+
+        <a href="{% url 'product_list' %}" style="display:block;margin-top:24px;background:#3b1f0c;color:#f5ead8;border-radius:10px;padding:12px;text-align:center;font-weight:700;font-size:.9rem;transition:background .3s ease;text-decoration:none;" onmouseover="this.style.background='#c07940';this.style.color='#1a0a00'" onmouseout="this.style.background='#3b1f0c';this.style.color='#f5ead8'">
+          <i class="fas fa-mug-hot me-2"></i> View Our Menu
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock main-content %}
+{% endblock %}
