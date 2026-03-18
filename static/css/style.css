@@ -1,0 +1,446 @@
+/* ============================================================
+   Navanath's Coffee Shop — style.css
+   Aesthetic: Warm Artisan | Rich espresso tones + cream accents
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
+
+/* ── CSS Variables ── */
+:root {
+  --espresso:    #1a0a00;
+  --roast:       #3b1f0c;
+  --mocha:       #6b3a2a;
+  --caramel:     #c07940;
+  --cream:       #f5ead8;
+  --foam:        #fdf6ec;
+  --accent:      #d4a055;
+  --text-dark:   #1a0a00;
+  --text-muted:  #7a5c48;
+  --white:       #ffffff;
+  --shadow-warm: 0 4px 24px rgba(60, 20, 10, 0.15);
+  --radius:      12px;
+  --transition:  0.3s ease;
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  background-color: var(--foam);
+  color: var(--text-dark);
+  font-weight: 400;
+  line-height: 1.7;
+  background-image:
+    radial-gradient(ellipse at 10% 20%, rgba(192, 121, 64, 0.07) 0%, transparent 60%),
+    radial-gradient(ellipse at 90% 80%, rgba(107, 58, 42, 0.07) 0%, transparent 60%);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+  color: var(--roast);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color var(--transition);
+}
+
+/* ── Navbar ── */
+.navbar {
+  background: var(--espresso) !important;
+  padding: 14px 24px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.35);
+  border-bottom: 2px solid var(--caramel);
+}
+
+.navbar-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--accent) !important;
+  letter-spacing: 0.03em;
+}
+
+.navbar-brand:hover {
+  color: var(--cream) !important;
+}
+
+.nav-link {
+  color: var(--cream) !important;
+  font-weight: 400;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  padding: 6px 14px !important;
+  border-radius: 6px;
+  transition: background var(--transition), color var(--transition);
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: rgba(212, 160, 85, 0.15);
+  color: var(--accent) !important;
+}
+
+.dropdown-menu {
+  background: var(--roast);
+  border: 1px solid var(--caramel);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-warm);
+  padding: 8px 0;
+  animation: dropFade 0.2s ease;
+}
+
+@keyframes dropFade {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-item {
+  color: var(--cream);
+  font-size: 0.9rem;
+  padding: 8px 20px;
+  transition: background var(--transition);
+}
+
+.dropdown-item:hover {
+  background: var(--caramel);
+  color: var(--espresso);
+}
+
+.dropdown-divider {
+  border-color: var(--mocha);
+}
+
+/* Cart button */
+.navbar .btn-secondary {
+  background: var(--caramel);
+  border: none;
+  color: var(--espresso);
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 6px 16px;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.navbar .btn-secondary:hover {
+  background: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* Search */
+.navbar .form-control {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid var(--mocha);
+  color: var(--cream);
+  border-radius: 8px;
+}
+
+.navbar .form-control::placeholder {
+  color: var(--text-muted);
+}
+
+.navbar .form-control:focus {
+  background: rgba(255,255,255,0.15);
+  border-color: var(--caramel);
+  box-shadow: 0 0 0 3px rgba(192, 121, 64, 0.25);
+  color: var(--cream);
+}
+
+.navbar .btn-outline-success {
+  border-color: var(--caramel);
+  color: var(--caramel);
+  border-radius: 8px;
+}
+
+.navbar .btn-outline-success:hover {
+  background: var(--caramel);
+  color: var(--espresso);
+}
+
+/* ── Alerts / Messages ── */
+.alert {
+  border-radius: 0;
+  border: none;
+  border-left: 4px solid var(--caramel);
+  background: rgba(212, 160, 85, 0.15);
+  color: var(--roast);
+  font-weight: 600;
+}
+
+/* ── Carousel ── */
+.carousel-item img {
+  object-fit: cover;
+  height: 600px;
+  filter: brightness(0.75) saturate(1.1);
+}
+
+.carousel-caption {
+  background: linear-gradient(to top, rgba(26,10,0,0.75), transparent);
+  border-radius: var(--radius);
+  padding: 24px 32px;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 90%;
+  text-align: center;
+}
+
+.carousel-caption h5 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--cream);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  margin-bottom: 8px;
+}
+
+.carousel-caption p {
+  font-size: 1.05rem;
+  color: rgba(245, 234, 216, 0.9);
+  font-style: italic;
+}
+
+.carousel-indicators [data-bs-slide-to] {
+  background-color: var(--caramel);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  opacity: 0.5;
+  border: none;
+}
+
+.carousel-indicators .active {
+  opacity: 1;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: drop-shadow(0 0 4px rgba(0,0,0,0.6));
+}
+
+/* ── Section Headings ── */
+.container h1.text-center,
+.container h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--roast);
+  position: relative;
+  padding-bottom: 16px;
+  margin-bottom: 32px !important;
+}
+
+.container h1.text-center::after,
+.container h1::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 64px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--caramel), var(--accent));
+  border-radius: 2px;
+}
+
+/* ── Product Cards ── */
+.card {
+  border: none;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--white);
+  box-shadow: 0 2px 12px rgba(60, 20, 10, 0.10);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 32px rgba(60, 20, 10, 0.20);
+}
+
+.card img {
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.card:hover img {
+  transform: scale(1.04);
+}
+
+.card-body {
+  padding: 18px 20px;
+  background: var(--white);
+}
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  color: var(--roast);
+  margin-bottom: 8px;
+}
+
+.card-text {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Card buttons */
+.btn-group .btn-outline-secondary {
+  border-color: var(--caramel);
+  color: var(--mocha);
+  font-size: 0.8rem;
+  border-radius: 6px !important;
+  padding: 4px 14px;
+  transition: all var(--transition);
+}
+
+.btn-group .btn-outline-secondary:hover {
+  background: var(--caramel);
+  color: var(--white);
+  border-color: var(--caramel);
+}
+
+.text-body-secondary {
+  color: var(--text-muted) !important;
+  font-size: 0.8rem;
+}
+
+/* ── Primary Buttons ── */
+.btn-primary {
+  background: var(--mocha);
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 9px 22px;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+
+.btn-primary:hover {
+  background: var(--caramel);
+  color: var(--espresso);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(192, 121, 64, 0.35);
+}
+
+/* ── View Cart Page ── */
+.container h1.mt-5 {
+  font-size: 2rem;
+  margin-bottom: 24px !important;
+}
+
+.container ul {
+  list-style: none;
+  padding: 0;
+}
+
+.container ul li {
+  background: var(--white);
+  border-radius: 8px;
+  padding: 12px 20px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(60, 20, 10, 0.08);
+  color: var(--roast);
+  font-weight: 600;
+  border-left: 4px solid var(--caramel);
+}
+
+/* ── Product List Page ── */
+.container h1.mt-5 + .row .card {
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+/* ── Product Detail Page ── */
+.cart-body h1.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--roast);
+  margin: 16px 0 8px;
+}
+
+.cart-body h4.cart-title {
+  color: var(--caramel);
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+
+.cart-body p.cart-text {
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.card-img-top,
+img.card-img-top {
+  border-radius: var(--radius) var(--radius) 0 0;
+  object-fit: cover;
+}
+
+/* ── Footer ── */
+footer {
+  background: var(--espresso) !important;
+  border-top: 2px solid var(--caramel);
+  margin-top: 64px;
+}
+
+footer h6 {
+  font-family: 'Playfair Display', serif;
+  color: var(--accent);
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+}
+
+.footer-link {
+  color: rgba(245, 234, 216, 0.7) !important;
+  font-size: 0.88rem;
+  line-height: 2.2;
+  transition: color var(--transition), padding-left var(--transition);
+  display: inline-block;
+}
+
+.footer-link:hover {
+  color: var(--accent) !important;
+  padding-left: 4px;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--foam);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--caramel);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mocha);
+}
+
+/* ── Utility ── */
+.shadow-sm { box-shadow: 0 2px 8px rgba(60,20,10,0.10) !important; }
+.my-4 { margin-top: 2rem !important; margin-bottom: 2rem !important; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .carousel-item img { height: 320px; }
+  .carousel-caption h5 { font-size: 1.3rem; }
+  .carousel-caption { padding: 14px 18px; }
+  .container h1.text-center { font-size: 1.5rem; }
+}
