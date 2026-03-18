@@ -1,25 +1,362 @@
 {% extends "base.html" %}
-
-{% block head %}
-<!-- Include Bootstrap CSS for styling -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-{% endblock %}
+{% load static %}
 
 {% block title %}Place Order{% endblock %}
 
+{% block head %}
+<style>
+  .place-order-section { padding: 56px 0 80px; }
+
+  .page-hero-sm {
+    background: linear-gradient(135deg, #1a0a00, #3b1f0c);
+    padding: 44px 0 38px;
+    text-align: center;
+    border-bottom: 2px solid rgba(192,121,64,.25);
+  }
+
+  .page-hero-sm .eyebrow {
+    font-size: .74rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: #c07940;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .page-hero-sm h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    color: #f5ead8;
+    margin: 0;
+  }
+
+  /* Review Card */
+  .review-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(60,20,10,.12);
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp .55s ease .05s forwards;
+  }
+
+  @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+
+  .review-card .card-header-custom {
+    background: #3b1f0c;
+    padding: 18px 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .review-card .card-header-custom h5 {
+    font-family: 'Playfair Display', serif;
+    color: #f5ead8;
+    font-size: 1.05rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .review-card .card-header-custom h5 i { color: #c07940; }
+
+  .review-card .card-header-custom .item-count {
+    background: rgba(192,121,64,.2);
+    border: 1px solid rgba(192,121,64,.35);
+    color: #d4a055;
+    font-size: .75rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 30px;
+  }
+
+  /* Items List */
+  .order-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 26px;
+    border-bottom: 1px solid rgba(192,121,64,.1);
+    transition: background .2s ease;
+  }
+
+  .order-item:hover { background: #fdf6ec; }
+  .order-item:last-child { border-bottom: none; }
+
+  .order-item .item-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .order-item .item-dot {
+    width: 36px; height: 36px;
+    background: rgba(192,121,64,.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #c07940;
+    font-size: .85rem;
+    flex-shrink: 0;
+  }
+
+  .order-item .item-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: #3b1f0c;
+    font-weight: 700;
+  }
+
+  .order-item .item-qty {
+    font-size: .8rem;
+    color: #7a5c48;
+    margin-top: 2px;
+  }
+
+  .order-item .item-price {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #c07940;
+  }
+
+  /* Empty */
+  .empty-order {
+    text-align: center;
+    padding: 56px 20px;
+  }
+
+  .empty-order i {
+    font-size: 3rem;
+    color: #c07940;
+    opacity: .3;
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  .empty-order p { color: #7a5c48; font-size: 1rem; }
+
+  /* Summary Panel */
+  .summary-panel {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(60,20,10,.1);
+    padding: 28px;
+    position: sticky;
+    top: 90px;
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp .55s ease .15s forwards;
+  }
+
+  .summary-panel h5 {
+    font-family: 'Playfair Display', serif;
+    color: #3b1f0c;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(192,121,64,.2);
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: .88rem;
+    color: #7a5c48;
+    margin-bottom: 10px;
+  }
+
+  .summary-row.total {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 2px solid rgba(192,121,64,.2);
+    font-size: 1rem;
+    font-weight: 700;
+    color: #3b1f0c;
+  }
+
+  .summary-row.total .amount { font-size: 1.3rem; color: #c07940; }
+
+  /* Steps */
+  .steps-box {
+    background: #fdf6ec;
+    border: 1px solid rgba(192,121,64,.2);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin: 20px 0;
+  }
+
+  .steps-box .steps-title {
+    font-size: .7rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #c07940;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .step-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: .83rem;
+    color: #5a3d2b;
+  }
+
+  .step-line:last-child { margin-bottom: 0; }
+
+  .step-num {
+    width: 22px; height: 22px;
+    background: #c07940;
+    color: #1a0a00;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .7rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .btn-confirm {
+    display: block;
+    width: 100%;
+    background: #3b1f0c;
+    color: #f5ead8;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: background .3s ease, transform .3s ease, box-shadow .3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-confirm:hover {
+    background: #c07940;
+    color: #1a0a00;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(192,121,64,.3);
+  }
+
+  .btn-back-cart {
+    display: block;
+    width: 100%;
+    border: 1.5px solid #c07940;
+    color: #c07940;
+    background: transparent;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: .88rem;
+    padding: 11px;
+    text-align: center;
+    margin-top: 10px;
+    transition: background .3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .btn-back-cart:hover { background: rgba(192,121,64,.08); color: #3b1f0c; }
+</style>
+{% endblock %}
+
 {% block body %}
-<div class="container">
-    <div class="row">
-        <h1 class="mt-5">Place Order</h1>
-        <form method="post">
-            {% csrf_token %}
-            <ul>
-                {% for item in cart_items  %}
-                    <li>{{ item.product.product_name }} ({{ item.quantity }}) - {{ item.total_price }}</li>
-                {% endfor %}
-            </ul>
-            <button type="submit">Confirm Order</button>
-        </form>
-    </div>
+
+<!-- Hero -->
+<div class="page-hero-sm">
+  <div class="eyebrow">Final Step</div>
+  <h1><i class="fas fa-clipboard-check me-2" style="color:#c07940"></i>Place Your Order</h1>
 </div>
-{% endblock %}
+
+<div class="container place-order-section">
+  <div class="row g-4 align-items-start">
+
+    <!-- Order Items Review -->
+    <div class="col-lg-8">
+      <div class="review-card">
+        <div class="card-header-custom">
+          <h5><i class="fas fa-mug-hot"></i> Review Your Order</h5>
+          <span class="item-count">{{ cart_items|length }} item{{ cart_items|length|pluralize }}</span>
+        </div>
+
+        {% if cart_items %}
+          {% for item in cart_items %}
+          <div class="order-item">
+            <div class="item-left">
+              <div class="item-dot"><i class="fas fa-coffee"></i></div>
+              <div>
+                <div class="item-name">{{ item.product.product_name }}</div>
+                <div class="item-qty">Quantity: {{ item.quantity }}</div>
+              </div>
+            </div>
+            <div class="item-price">₹{{ item.total_price }}</div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty-order">
+            <i class="fas fa-mug-hot"></i>
+            <p>Your cart is empty. Add some coffees first!</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Confirm Panel -->
+    <div class="col-lg-4">
+      <div class="summary-panel">
+        <h5><i class="fas fa-receipt me-2" style="color:#c07940"></i>Order Summary</h5>
+
+        <div class="summary-row">
+          <span>Items</span>
+          <span>{{ cart_items|length }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Delivery</span>
+          <span style="color:#6b3a2a;font-weight:600;">Free</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total</span>
+          <span class="amount">
+            ₹{% for item in cart_items %}{% if forloop.last %}{{ item.total_price }}{% endif %}{% endfor %}
+          </span>
+        </div>
+
+        <!-- Steps -->
+        <div class="steps-box">
+          <div class="steps-title">What happens next</div>
+          <div class="step-line"><span class="step-num">1</span> Order confirmed instantly</div>
+          <div class="step-line"><span class="step-num">2</span> Barista starts brewing</div>
+          <div class="step-line"><span class="step-num">3</span> Delivered hot to your door</div>
+        </div>
+
+        {% if cart_items %}
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn-confirm">
+            <i class="fas fa-check-circle"></i> Confirm Order
+          </button>
+        </form>
+        {% endif %}
+
+        <a href="{% url 'view_cart' %}" class="btn-back-cart">
+          <i class="fas fa-arrow-left"></i> Back to Cart
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
