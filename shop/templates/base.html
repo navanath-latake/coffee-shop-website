@@ -1,128 +1,377 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock title %} | Coffee Shop</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    {% block head %}{% endblock head %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock title %} | Navanath's Coffee Shop</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    /* ── Variables ── */
+    :root {
+      --espresso:   #1a0a00;
+      --roast:      #3b1f0c;
+      --mocha:      #6b3a2a;
+      --caramel:    #c07940;
+      --cream:      #f5ead8;
+      --foam:       #fdf6ec;
+      --accent:     #d4a055;
+      --muted:      #7a5c48;
+      --shadow:     0 4px 24px rgba(60,20,10,.15);
+      --r:          12px;
+      --t:          .3s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--foam);
+      color: var(--espresso);
+      line-height: 1.7;
+      background-image:
+        radial-gradient(ellipse at 8% 15%, rgba(192,121,64,.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 92% 85%, rgba(107,58,42,.07) 0%, transparent 55%);
+    }
+
+    h1,h2,h3,h4,h5,h6 { font-family:'Playfair Display',serif; color:var(--roast); }
+    a { text-decoration:none; color:inherit; transition:color var(--t); }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar{width:7px}
+    ::-webkit-scrollbar-track{background:var(--foam)}
+    ::-webkit-scrollbar-thumb{background:var(--caramel);border-radius:4px}
+    ::-webkit-scrollbar-thumb:hover{background:var(--mocha)}
+
+    /* ── Navbar ── */
+    .navbar {
+      background: var(--espresso) !important;
+      padding: 0 28px;
+      min-height: 68px;
+      border-bottom: 2px solid var(--caramel);
+      box-shadow: 0 2px 20px rgba(0,0,0,.4);
+    }
+
+    .navbar-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--accent) !important;
+      letter-spacing: .04em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .navbar-brand i { color: var(--caramel); font-size: 1.3rem; }
+    .navbar-brand:hover { color: var(--cream) !important; }
+
+    .nav-link {
+      color: var(--cream) !important;
+      font-size: .9rem;
+      font-weight: 400;
+      letter-spacing: .05em;
+      padding: 8px 14px !important;
+      border-radius: 6px;
+      transition: background var(--t), color var(--t);
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background: rgba(212,160,85,.15);
+      color: var(--accent) !important;
+    }
+
+    .dropdown-menu {
+      background: var(--roast);
+      border: 1px solid var(--caramel);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      padding: 8px 0;
+      animation: dropFade .2s ease;
+    }
+
+    @keyframes dropFade {
+      from { opacity:0; transform:translateY(-8px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .dropdown-item {
+      color: var(--cream);
+      font-size: .88rem;
+      padding: 9px 22px;
+      transition: background var(--t);
+    }
+
+    .dropdown-item:hover { background: var(--caramel); color: var(--espresso); }
+    .dropdown-divider { border-color: var(--mocha); }
+
+    .cart-btn {
+      background: var(--caramel);
+      color: var(--espresso);
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 18px;
+      font-size: .88rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--t), transform var(--t);
+      cursor: pointer;
+    }
+    .cart-btn:hover { background: var(--accent); transform: translateY(-1px); }
+
+    .search-form { display: flex; gap: 6px; }
+
+    .search-form input {
+      background: rgba(255,255,255,.1);
+      border: 1px solid var(--mocha);
+      color: var(--cream);
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: .88rem;
+      transition: border-color var(--t), box-shadow var(--t);
+    }
+    .search-form input::placeholder { color: rgba(245,234,216,.5); }
+    .search-form input:focus {
+      outline: none;
+      border-color: var(--caramel);
+      box-shadow: 0 0 0 3px rgba(192,121,64,.25);
+      background: rgba(255,255,255,.15);
+      color: var(--cream);
+    }
+
+    .search-form button {
+      background: transparent;
+      border: 1px solid var(--caramel);
+      color: var(--caramel);
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: .88rem;
+      cursor: pointer;
+      transition: background var(--t), color var(--t);
+    }
+    .search-form button:hover { background: var(--caramel); color: var(--espresso); }
+
+    /* ── Alerts ── */
+    .alert {
+      border-radius: 0;
+      border: none;
+      border-left: 4px solid var(--caramel);
+      background: rgba(212,160,85,.12);
+      color: var(--roast);
+      font-weight: 600;
+    }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      background: var(--mocha);
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      letter-spacing: .03em;
+      padding: 9px 22px;
+      transition: background var(--t), transform var(--t), box-shadow var(--t);
+    }
+    .btn-primary:hover {
+      background: var(--caramel);
+      color: var(--espresso);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(192,121,64,.35);
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--espresso) !important;
+      border-top: 2px solid var(--caramel);
+      margin-top: 72px;
+    }
+
+    footer .footer-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    footer .footer-tagline {
+      color: rgba(245,234,216,.55);
+      font-size: .85rem;
+      font-style: italic;
+    }
+
+    footer h6 {
+      font-family: 'Playfair Display', serif;
+      color: var(--accent);
+      font-size: .78rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .footer-link {
+      color: rgba(245,234,216,.65) !important;
+      font-size: .87rem;
+      line-height: 2.3;
+      display: inline-block;
+      transition: color var(--t), padding-left var(--t);
+    }
+    .footer-link:hover { color: var(--accent) !important; padding-left: 5px; }
+
+    .footer-social a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(212,160,85,.3);
+      color: var(--cream);
+      font-size: .9rem;
+      margin-right: 8px;
+      transition: background var(--t), border-color var(--t);
+    }
+    .footer-social a:hover { background: var(--caramel); border-color: var(--caramel); color: var(--espresso); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(212,160,85,.15);
+      padding: 16px 0;
+      color: rgba(245,234,216,.35);
+      font-size: .8rem;
+      text-align: center;
+    }
+  </style>
+
+  {% block head %}{% endblock head %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/">Coffee Shop</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">About Us</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="/services" role="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                Services
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="/services">Coffea Arabica</a></li>
-                <li><a class="dropdown-item" href="/services">Latte</a></li>
-                <li><a class="dropdown-item" href="/services">Cappuccino</a></li>
-                <li><a class="dropdown-item" href="/services">Americano</a></li>
-                <li><a class="dropdown-item" href="/services">Indian Filter Coffee</a></li>
-                <li><a class="dropdown-item" href="services">Turkish Coffee</a></li>
-                <li><a class="dropdown-item" href="/services">Mocha</a></li>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="/services">Other Menu</a></li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/contact">Contact Us</a>
-            </li>
-            {% comment %} <li class="nav-item">
-              <a class="nav-link" href="{% url 'view_cart' %}">
-                  Cart <span class="badge badge-pill badge-primary">{{ cart_quantity }}</span>
-              </a>
-          </li> {% endcomment %}
-  
-          </ul>
-          {% comment %} <button onclick="window.location.href='/view'" type="button" class="btn btn-secondary mx-2" id="popcart"
-          data-html="true" data-container="body" data-toggle="popover" data-placement="bottom"
-          data-content="Vivamus sagittis lacus vel augue laoreet rutrum faucibus.">
-          Cart(<span id="cart">{{cart_items.quantity}}</span>)
-          </button> {% endcomment %}
-          
-          <a class="nav-link" href="{% url 'view_cart' %}" >
-            <button class="btn btn-secondary" type="button" >
-            Cart(<span class="badge badge-pill badge-secondary">{{cart_quantity}}</span>)
+
+  <!-- ── Navbar ── -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">
+        <i class="fas fa-mug-hot"></i> Navanath's Coffee
+      </a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" style="color:var(--cream)">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-3">
+          <li class="nav-item">
+            <a class="nav-link active" href="/"><i class="fas fa-home me-1"></i>Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="fas fa-info-circle me-1"></i>About Us</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="/services" role="button" data-bs-toggle="dropdown">
+              <i class="fas fa-coffee me-1"></i>Menu
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/services"><i class="fas fa-circle me-2" style="font-size:.45rem;color:var(--caramel)"></i>Coffea Arabica</a></li>
+              <li><a class="dropdown-item" href="/services"><i class="fas fa-circle me-2" style="font-size:.45rem;color:var(--caramel)"></i>Latte</a></li>
+              <li><a class="dropdown-item" href="/services"><i class="fas fa-circle me-2" style="font-size:.45rem;color:var(--caramel)"></i>Cappuccino</a></li>
+              <li><a class="dropdown-item" href="/services"><i class="fas fa-circle me-2" style="font-size:.45rem;color:var(--caramel)"></i>Americano</a></li>
+              <li><a class="dropdown-item" href="/services"><i class="fas fa-circle me-2" style="font-size:.45rem;color:var(--caramel)"></i>Indian Filter Coffee</a></li>
+              <li><a class="dropdown-item" href="/services"><i class="fas fa-circle me-2" style="font-size:.45rem;color:var(--caramel)"></i>Turkish Coffee</a></li>
+              <li><a class="dropdown-item" href="/services"><i class="fas fa-circle me-2" style="font-size:.45rem;color:var(--caramel)"></i>Mocha</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/services"><i class="fas fa-list me-2"></i>Full Menu</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/contact"><i class="fas fa-envelope me-1"></i>Contact</a>
+          </li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-3">
+          <a href="{% url 'view_cart' %}" style="text-decoration:none;">
+            <button class="cart-btn">
+              <i class="fas fa-shopping-bag"></i>
+              Cart <span style="background:var(--roast);color:var(--cream);border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;">{{ cart_quantity }}</span>
             </button>
           </a>
-  
-          <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
+          <form class="search-form" role="search">
+            <input type="search" placeholder="Search coffee…" aria-label="Search">
+            <button type="submit"><i class="fas fa-search"></i></button>
           </form>
         </div>
       </div>
-    </nav>
-    {% if messages %}
+    </div>
+  </nav>
+
+  <!-- ── Messages ── -->
+  {% if messages %}
     {% for message in messages %}
     <div class="alert alert-{{ message.tags }} alert-dismissible fade show my-0" role="alert">
-      <strong>{{ message }}</strong>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <i class="fas fa-info-circle me-2"></i><strong>{{ message }}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
     {% endfor %}
-    {% endif %}
-    {% block body %}{% endblock body %}
-    <!-- Include Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-  
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"></script>
-      <footer class="bg-dark text-white">
-        <div class="container py-4">
-          <div class="row py-5">
-            <div class="col-md-4 mb-3 mb-md-0">
-              <h6 class="text-uppercase mb-3">Customer services</h6>
-              <ul class="list-unstyled mb-0">
-                <li><a class="footer-link" href="#">Help &amp; Contact Us</a></li>
-                <li><a class="footer-link" href="#">Returns &amp; Refunds</a></li>
-                <li><a class="footer-link" href="#">Online Stores</a></li>
-                <li><a class="footer-link" href="#">Terms &amp; Conditions</a></li>
-              </ul>
-            </div>
-            <div class="col-md-4 mb-3 mb-md-0">
-              <h6 class="text-uppercase mb-3">Company</h6>
-              <ul class="list-unstyled mb-0">
-                <li><a class="footer-link" href="#">What We Do</a></li>
-                <li><a class="footer-link" href="#">Available Services</a></li>
-                <li><a class="footer-link" href="#">Latest Posts</a></li>
-                <li><a class="footer-link" href="#">FAQs</a></li>
-              </ul>
-            </div>
-            <div class="col-md-4">
-              <h6 class="text-uppercase mb-3">Social media</h6>
-              <ul class="list-unstyled mb-0">
-                <li><a class="footer-link" href="#">Twitter</a></li>
-                <li><a class="footer-link" href="#">Instagram</a></li>
-                <li><a class="footer-link" href="#">Tumblr</a></li>
-                <li><a class="footer-link" href="#">Pinterest</a></li>
-              </ul>
-            </div>
+  {% endif %}
+
+  <!-- ── Page Content ── -->
+  {% block body %}{% endblock body %}
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="container py-5">
+      <div class="row">
+        <!-- Brand -->
+        <div class="col-md-4 mb-4 mb-md-0">
+          <div class="footer-brand"><i class="fas fa-mug-hot me-2"></i>Navanath's Coffee</div>
+          <p class="footer-tagline mb-4">We serve love with every cup.</p>
+          <div class="footer-social">
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-pinterest"></i></a>
           </div>
         </div>
-      </footer>
-  </body>
-  
-  </html>
+        <!-- Customer Service -->
+        <div class="col-md-2 mb-4 mb-md-0">
+          <h6>Support</h6>
+          <ul class="list-unstyled">
+            <li><a class="footer-link" href="#">Help & Contact</a></li>
+            <li><a class="footer-link" href="#">Returns & Refunds</a></li>
+            <li><a class="footer-link" href="#">Online Stores</a></li>
+            <li><a class="footer-link" href="#">Terms & Conditions</a></li>
+          </ul>
+        </div>
+        <!-- Company -->
+        <div class="col-md-2 mb-4 mb-md-0">
+          <h6>Company</h6>
+          <ul class="list-unstyled">
+            <li><a class="footer-link" href="#">What We Do</a></li>
+            <li><a class="footer-link" href="#">Our Services</a></li>
+            <li><a class="footer-link" href="#">Latest Posts</a></li>
+            <li><a class="footer-link" href="#">FAQs</a></li>
+          </ul>
+        </div>
+        <!-- Visit Us -->
+        <div class="col-md-4">
+          <h6>Visit Us</h6>
+          <p style="color:rgba(245,234,216,.65);font-size:.87rem;line-height:2;">
+            <i class="fas fa-map-marker-alt me-2" style="color:var(--caramel)"></i>Pimpri-Chinchwad, Maharashtra<br>
+            <i class="fas fa-clock me-2" style="color:var(--caramel)"></i>Mon–Sun: 7:00 AM – 10:00 PM<br>
+            <i class="fas fa-phone me-2" style="color:var(--caramel)"></i>+91 98765 43210
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2025 Navanath's Coffee Shop. All rights reserved. Made with <i class="fas fa-heart" style="color:var(--caramel)"></i> & Espresso.
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -3,212 +3,503 @@
 
 {% block title %}Home{% endblock title %}
 
+{% block head %}
+<style>
+  /* ── Carousel ── */
+  .hero-carousel { position: relative; overflow: hidden; }
+
+  .carousel-item img {
+    height: 620px;
+    object-fit: cover;
+    filter: brightness(.65) saturate(1.1);
+    transition: transform 6s ease;
+  }
+
+  .carousel-item.active img { transform: scale(1.04); }
+
+  .carousel-caption {
+    background: linear-gradient(135deg, rgba(26,10,0,.75), rgba(59,31,12,.5));
+    border-radius: 16px;
+    padding: 32px 40px;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: 88%;
+    text-align: center;
+    border: 1px solid rgba(212,160,85,.25);
+    backdrop-filter: blur(4px);
+    animation: captionIn .7s ease;
+  }
+
+  @keyframes captionIn {
+    from { opacity:0; transform:translateX(-50%) translateY(20px); }
+    to   { opacity:1; transform:translateX(-50%) translateY(0); }
+  }
+
+  .carousel-caption h5 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    color: #f5ead8;
+    text-shadow: 0 2px 12px rgba(0,0,0,.5);
+    margin-bottom: 10px;
+  }
+
+  .carousel-caption p {
+    font-size: 1rem;
+    color: rgba(245,234,216,.85);
+    font-style: italic;
+    margin: 0;
+  }
+
+  .carousel-caption .hero-btn {
+    display: inline-block;
+    margin-top: 18px;
+    background: #c07940;
+    color: #1a0a00;
+    font-weight: 700;
+    font-size: .9rem;
+    padding: 10px 28px;
+    border-radius: 30px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    border: none;
+    transition: background .3s ease, transform .3s ease;
+  }
+
+  .carousel-caption .hero-btn:hover {
+    background: #d4a055;
+    transform: translateY(-2px);
+  }
+
+  .carousel-indicators [data-bs-slide-to] {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #c07940;
+    opacity: .4;
+    border: none;
+    margin: 0 4px;
+  }
+
+  .carousel-indicators .active { opacity: 1; }
+
+  /* ── Section Header ── */
+  .section-header {
+    text-align: center;
+    margin: 56px 0 40px;
+  }
+
+  .section-header .eyebrow {
+    font-size: .78rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #c07940;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .section-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.3rem;
+    color: #3b1f0c;
+    margin-bottom: 12px;
+  }
+
+  .section-header .divider {
+    width: 60px; height: 3px;
+    background: linear-gradient(90deg, #c07940, #d4a055);
+    border-radius: 2px;
+    margin: 0 auto;
+  }
+
+  /* ── Cards ── */
+  .coffee-grid { padding-bottom: 64px; }
+
+  .coffee-card {
+    border: none;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 3px 14px rgba(60,20,10,.1);
+    transition: transform .35s ease, box-shadow .35s ease;
+    height: 100%;
+  }
+
+  .coffee-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(60,20,10,.18);
+  }
+
+  .coffee-card .img-wrap {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .coffee-card .img-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(26,10,0,.35), transparent 60%);
+    opacity: 0;
+    transition: opacity .35s ease;
+  }
+
+  .coffee-card:hover .img-wrap::after { opacity: 1; }
+
+  .coffee-card img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    transition: transform .45s ease;
+    display: block;
+  }
+
+  .coffee-card:hover img { transform: scale(1.07); }
+
+  .coffee-card .card-body { padding: 20px 22px 22px; }
+
+  .coffee-card .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: #3b1f0c;
+    margin-bottom: 8px;
+  }
+
+  .coffee-card .card-text {
+    font-size: .84rem;
+    color: #7a5c48;
+    line-height: 1.65;
+    margin-bottom: 16px;
+  }
+
+  .coffee-card .card-footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .coffee-card .btn-view {
+    background: #3b1f0c;
+    color: #f5ead8;
+    border: none;
+    border-radius: 8px;
+    font-size: .82rem;
+    font-weight: 700;
+    padding: 7px 16px;
+    letter-spacing: .04em;
+    transition: background .3s ease, transform .3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .coffee-card .btn-view:hover { background: #c07940; color: #1a0a00; transform: translateY(-1px); }
+
+  .coffee-card .time-badge {
+    font-size: .76rem;
+    color: #7a5c48;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .coffee-card .time-badge i { color: #c07940; }
+
+  /* ── Feature Strip ── */
+  .feature-strip {
+    background: #3b1f0c;
+    padding: 40px 0;
+    margin: 0;
+  }
+
+  .feature-strip .feature-item {
+    text-align: center;
+    color: #f5ead8;
+  }
+
+  .feature-strip .feature-item i {
+    font-size: 2rem;
+    color: #c07940;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .feature-strip .feature-item h6 {
+    font-family: 'Playfair Display', serif;
+    color: #f5ead8;
+    font-size: 1rem;
+    margin-bottom: 4px;
+  }
+
+  .feature-strip .feature-item p {
+    font-size: .82rem;
+    color: rgba(245,234,216,.6);
+    margin: 0;
+  }
+
+  /* ── Staggered Card Animation ── */
+  .stagger-card {
+    opacity: 0;
+    transform: translateY(24px);
+    animation: cardReveal .55s ease forwards;
+  }
+
+  @keyframes cardReveal {
+    to { opacity:1; transform:translateY(0); }
+  }
+
+  .stagger-card:nth-child(1) { animation-delay:.05s; }
+  .stagger-card:nth-child(2) { animation-delay:.12s; }
+  .stagger-card:nth-child(3) { animation-delay:.19s; }
+  .stagger-card:nth-child(4) { animation-delay:.26s; }
+  .stagger-card:nth-child(5) { animation-delay:.33s; }
+  .stagger-card:nth-child(6) { animation-delay:.40s; }
+  .stagger-card:nth-child(7) { animation-delay:.47s; }
+  .stagger-card:nth-child(8) { animation-delay:.54s; }
+  .stagger-card:nth-child(9) { animation-delay:.61s; }
+</style>
+{% endblock head %}
+
 {% block body %}
-<div class="container-fluid px-0">
-  <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel" data-interval="3000">
+
+<!-- ── Hero Carousel ── -->
+<div class="hero-carousel">
+  <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
     <div class="carousel-indicators">
-      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
-        aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1"
-        aria-label="Slide 2"></button>
-      <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2"
-        aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+      <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
     </div>
     <div class="carousel-inner">
       <div class="carousel-item active">
-        
-        <img src="{% static 'images/home1.png' %}" class="d-block w-100" alt="Image" height="600">
+        <img src="{% static 'images/home1.png' %}" class="d-block w-100" alt="Coffee Shop">
         <div class="carousel-caption d-none d-md-block">
           <h5>Welcome To Our Coffee Shop</h5>
-          <p>You never befour try Coffee like my Coffee's Shop's Coffee.</p>
+          <p>You've never tried coffee like ours before.</p>
+          <a href="{% url 'product_list' %}" class="hero-btn">Explore Menu</a>
         </div>
       </div>
       <div class="carousel-item">
-        <img src="{% static 'images/home2.png' %}" class="d-block w-100" alt="Image" height="600">
+        <img src="{% static 'images/home2.png' %}" class="d-block w-100" alt="Best Coffee">
         <div class="carousel-caption d-none d-md-block">
-          <h5>Navanath's Best Coffee </h5>
-          <p>This Coffee shop was inaugurated by special one.</p>
+          <h5>Navanath's Finest Brews</h5>
+          <p>Inaugurated with love by someone special.</p>
+          <a href="{% url 'product_list' %}" class="hero-btn">Order Now</a>
         </div>
       </div>
       <div class="carousel-item">
-        <img src="{% static 'images/home3.png' %}" class="d-block w-100" alt="Image" height="600">
+        <img src="{% static 'images/home3.png' %}" class="d-block w-100" alt="World Famous Coffee">
         <div class="carousel-caption d-none d-md-block">
-          <h5>Navanath's World Famous Best Coffee Ever</h5>
-          <p>We serve love with our Coffee.</p>
+          <h5>World Famous, Locally Loved</h5>
+          <p>We serve love with every cup.</p>
+          <a href="{% url 'product_list' %}" class="hero-btn">View Menu</a>
         </div>
       </div>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
     </button>
   </div>
 </div>
 
-<div class="container my-3">
-  <h1 class="my-4 text-center">Select from our range of Coffee's</h1>
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-    
-    <div class="col">
-      <div class="card shadow-sm">
-        <a href="{% url 'product_list' %}">
-          <img src="{% static 'americano.jpg' %}" class="d-block w-100" alt="img" height="300">
-        </a>
+<!-- ── Feature Strip ── -->
+<div class="feature-strip">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-6 col-md-3 feature-item">
+        <i class="fas fa-seedling"></i>
+        <h6>100% Organic</h6>
+        <p>Ethically sourced beans</p>
+      </div>
+      <div class="col-6 col-md-3 feature-item">
+        <i class="fas fa-fire"></i>
+        <h6>Freshly Roasted</h6>
+        <p>Roasted daily in-house</p>
+      </div>
+      <div class="col-6 col-md-3 feature-item">
+        <i class="fas fa-mug-hot"></i>
+        <h6>Expert Baristas</h6>
+        <p>Crafted with precision</p>
+      </div>
+      <div class="col-6 col-md-3 feature-item">
+        <i class="fas fa-truck"></i>
+        <h6>Fast Delivery</h6>
+        <p>Hot & on time, always</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Coffee Grid ── -->
+<div class="container coffee-grid">
+  <div class="section-header">
+    <div class="eyebrow">Our Specialities</div>
+    <h2>Select From Our Range of Coffees</h2>
+    <div class="divider"></div>
+  </div>
+
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+
+    <div class="col stagger-card">
+      <div class="coffee-card">
+        <div class="img-wrap">
+          <a href="{% url 'product_list' %}">
+            <img src="{% static 'americano.jpg' %}" alt="Americano">
+          </a>
+        </div>
         <div class="card-body">
-          <p class="card-text">An americano is simply just hot water and espresso. It'll either be served 1/2 and 1/2 or 1/3 espresso to 2/3 water, depending on the coffee shop in question or how you've chosen to brew it.</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-            </div>
-            <small class="text-body-secondary">9 mins</small>
+          <h5 class="card-title">Americano</h5>
+          <p class="card-text">Hot water and espresso combined — served half and half or one-third espresso to two-thirds water for a clean, bold brew.</p>
+          <div class="card-footer-row">
+            <a href="{% url 'product_list' %}" class="btn-view">View Menu</a>
+            <span class="time-badge"><i class="fas fa-clock"></i> 9 mins</span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col">
-      <div class="card shadow-sm">
-        <a href="{% url 'product_list' %}">
-          <img src="{% static 'arabica.jpg' %}" class="d-block w-100" alt="img" height="300">
-        </a>
+    <div class="col stagger-card">
+      <div class="coffee-card">
+        <div class="img-wrap">
+          <a href="{% url 'product_list' %}">
+            <img src="{% static 'arabica.jpg' %}" alt="Arabica">
+          </a>
+        </div>
         <div class="card-body">
-          <p class="card-text">The arabica coffee plant is a small tree that is between 2m and 8m tall and has evergreen, usually shiny leaves.</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-            </div>
-            <small class="text-body-secondary">9 mins</small>
+          <h5 class="card-title">Coffea Arabica</h5>
+          <p class="card-text">A small tree with evergreen shiny leaves producing our finest, most sought-after coffee beans with a naturally sweet flavour.</p>
+          <div class="card-footer-row">
+            <a href="{% url 'product_list' %}" class="btn-view">View Menu</a>
+            <span class="time-badge"><i class="fas fa-clock"></i> 9 mins</span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col">
-      <div class="card shadow-sm">
-        <a href="{% url 'product_list' %}">
-          <img src="{% static 'cappuccino.jpg' %}" class="d-block w-100" alt="img" height="300">
-        </a>
+    <div class="col stagger-card">
+      <div class="coffee-card">
+        <div class="img-wrap">
+          <a href="{% url 'product_list' %}">
+            <img src="{% static 'cappuccino.jpg' %}" alt="Cappuccino">
+          </a>
+        </div>
         <div class="card-body">
-          <p class="card-text">A cappuccino is a beloved espresso-based hot coffee drink made with layering of espresso, steamed milk, and milk foam on top.</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-            </div>
+          <h5 class="card-title">Cappuccino</h5>
+          <p class="card-text">A beloved espresso drink with layered espresso, steamed milk, and a beautiful cloud of milk foam on top.</p>
+          <div class="card-footer-row">
+            <a href="{% url 'product_list' %}" class="btn-view">View Menu</a>
+            <span class="time-badge"><i class="fas fa-clock"></i> 9 mins</span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col">
-      <div class="card shadow-sm">
-        <a href="{% url 'product_list' %}">
-          <img src="{% static 'indian filter coffee.jpg' %}" class="d-block w-100" alt="img" height="300">
-        </a>
+    <div class="col stagger-card">
+      <div class="coffee-card">
+        <div class="img-wrap">
+          <a href="{% url 'product_list' %}">
+            <img src="{% static 'indian filter coffee.jpg' %}" alt="Indian Filter Coffee">
+          </a>
+        </div>
         <div class="card-body">
-          <p class="card-text">Indian Filter Coffee is one of our favourite blends of finest Arabica Beans (70%) and Chicory (30%).</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-            </div>
-            <small class="text-body-secondary">9 mins</small>
+          <h5 class="card-title">Indian Filter Coffee</h5>
+          <p class="card-text">Our favourite blend — 70% finest Arabica Beans with 30% Chicory for a rich, aromatic South Indian experience.</p>
+          <div class="card-footer-row">
+            <a href="{% url 'product_list' %}" class="btn-view">View Menu</a>
+            <span class="time-badge"><i class="fas fa-clock"></i> 9 mins</span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col">
-      <div class="card shadow-sm">
-        <a href="{% url 'product_list' %}">
-          <img src="{% static 'latte.jpg' %}" class="d-block w-100" alt="img" height="300">
-        </a>
+    <div class="col stagger-card">
+      <div class="coffee-card">
+        <div class="img-wrap">
+          <a href="{% url 'product_list' %}">
+            <img src="{% static 'latte.jpg' %}" alt="Latte">
+          </a>
+        </div>
         <div class="card-body">
-          <p class="card-text">A latte or cafè latte is a milk coffee that boasts a silky layer of foam as a real highlight of the drink.</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-            </div>
-            <small class="text-body-secondary">9 mins</small>
+          <h5 class="card-title">Caffè Latte</h5>
+          <p class="card-text">A silky milk coffee with a real highlight — a beautiful, velvety layer of foam that makes every sip special.</p>
+          <div class="card-footer-row">
+            <a href="{% url 'product_list' %}" class="btn-view">View Menu</a>
+            <span class="time-badge"><i class="fas fa-clock"></i> 9 mins</span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col">
-      <div class="card shadow-sm">
-        <a href="{% url 'product_list' %}">
-          <img src="{% static 'mocha.jpg' %}" class="d-block w-100" alt="img" height="300">
-        </a>
+    <div class="col stagger-card">
+      <div class="coffee-card">
+        <div class="img-wrap">
+          <a href="{% url 'product_list' %}">
+            <img src="{% static 'mocha.jpg' %}" alt="Mocha">
+          </a>
+        </div>
         <div class="card-body">
-          <p class="card-text">Essentially, 'mocha' means a type of coffee that is made from a specific coffee bean originally only grown in Mocha, Yemen.</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-            </div>
-            <small class="text-body-secondary">9 mins</small>
+          <h5 class="card-title">Mocha</h5>
+          <p class="card-text">Named after Mocha, Yemen — a rich coffee variety with deep chocolate undertones that delight with every sip.</p>
+          <div class="card-footer-row">
+            <a href="{% url 'product_list' %}" class="btn-view">View Menu</a>
+            <span class="time-badge"><i class="fas fa-clock"></i> 9 mins</span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col">
-      <div class="card shadow-sm">
-        <a href="{% url 'product_list' %}">
-          <img src="{% static 'Turkish Coffee.jpg' %}" class="d-block w-100" alt="img" height="300">
-        </a>
+    <div class="col stagger-card">
+      <div class="coffee-card">
+        <div class="img-wrap">
+          <a href="{% url 'product_list' %}">
+            <img src="{% static 'Turkish Coffee.jpg' %}" alt="Turkish Coffee">
+          </a>
+        </div>
         <div class="card-body">
-          <p class="card-text">Turkish coffee is made of very finely ground coffee beans, and is also different from other types of coffee in that it is brewed by boiling in traditional copper pots called cezve.</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-            </div>
-            <small class="text-body-secondary">9 mins</small>
+          <h5 class="card-title">Turkish Coffee</h5>
+          <p class="card-text">Finely ground beans brewed by boiling in traditional copper cezve pots — an ancient ritual in every cup.</p>
+          <div class="card-footer-row">
+            <a href="{% url 'product_list' %}" class="btn-view">View Menu</a>
+            <span class="time-badge"><i class="fas fa-clock"></i> 9 mins</span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col">
-      <div class="card shadow-sm">
-        <a href="{% url 'product_list' %}">
-          <img src="{% static 'americano1.jpg' %}" class="d-block w-100" alt="img" height="300">
-        </a>
+    <div class="col stagger-card">
+      <div class="coffee-card">
+        <div class="img-wrap">
+          <a href="{% url 'product_list' %}">
+            <img src="{% static 'americano1.jpg' %}" alt="Americano Classic">
+          </a>
+        </div>
         <div class="card-body">
-          <p class="card-text">An americano is simply just hot water and espresso. It'll either be served 1/2 and 1/2 or 1/3 espresso to 2/3 water, depending on the coffee shop in question or how you've chosen to brew it.</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-            </div>
-            <small class="text-body-secondary">9 mins</small>
+          <h5 class="card-title">Classic Americano</h5>
+          <p class="card-text">Our timeless take on the Americano — simple, bold, and satisfying with the perfect espresso-to-water ratio.</p>
+          <div class="card-footer-row">
+            <a href="{% url 'product_list' %}" class="btn-view">View Menu</a>
+            <span class="time-badge"><i class="fas fa-clock"></i> 9 mins</span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="col">
-      <div class="card shadow-sm">
-        <a href="{% url 'product_list' %}">
-          <img src="{% static 'cappuccino1.jpg' %}" class="d-block w-100" alt="img" height="300">
-        </a>
+    <div class="col stagger-card">
+      <div class="coffee-card">
+        <div class="img-wrap">
+          <a href="{% url 'product_list' %}">
+            <img src="{% static 'cappuccino1.jpg' %}" alt="Cappuccino Special">
+          </a>
+        </div>
         <div class="card-body">
-          <p class="card-text">A cappuccino is a beloved espresso-based hot coffee drink made with layering of espresso, steamed milk, and milk foam on top.</p>
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="btn-group">
-              <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
-            </div>
-            <small class="text-body-secondary">9 mins</small>
+          <h5 class="card-title">Cappuccino Special</h5>
+          <p class="card-text">Our signature twist on the classic — espresso, perfectly steamed milk, and a generous crowned foam topping.</p>
+          <div class="card-footer-row">
+            <a href="{% url 'product_list' %}" class="btn-view">View Menu</a>
+            <span class="time-badge"><i class="fas fa-clock"></i> 9 mins</span>
           </div>
         </div>
       </div>
@@ -216,4 +507,5 @@
 
   </div>
 </div>
+
 {% endblock body %}
