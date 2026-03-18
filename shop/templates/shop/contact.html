@@ -5,27 +5,43 @@
 
 {% block head %}
 <style>
-  /* Hero Image */
+  /* Hero - CSS only, no image needed */
   .contact-hero {
     position: relative;
     overflow: hidden;
     height: 380px;
-  }
-  .contact-hero img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(.55) saturate(1.1);
-  }
-  .contact-hero .hero-overlay {
-    position: absolute;
-    inset: 0;
+    background: linear-gradient(135deg, #1a0a00 0%, #3b1f0c 50%, #6b3a2a 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: linear-gradient(to top, rgba(26,10,0,.6), transparent);
+  }
+  .contact-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(192,121,64,.2) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 50%, rgba(107,58,42,.2) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 100%, rgba(212,160,85,.15) 0%, transparent 50%);
+  }
+  .contact-hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 80px;
+    background: linear-gradient(to top, #fdf6ec, transparent);
+  }
+  .contact-hero .hero-overlay {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 20px;
   }
   .contact-hero .eyebrow {
     font-size: .75rem;
@@ -40,7 +56,7 @@
     font-size: 2.8rem;
     color: #f5ead8;
     margin-bottom: 8px;
-    text-shadow: 0 2px 12px rgba(0,0,0,.5);
+    text-shadow: 0 2px 12px rgba(0,0,0,.4);
   }
   .contact-hero p {
     color: rgba(245,234,216,.75);
@@ -221,7 +237,6 @@
 
 <!-- Hero -->
 <div class="contact-hero">
-  <img src="{% static 'contact_us.jpg' %}" alt="Contact Us">
   <div class="hero-overlay">
     <div class="eyebrow">We'd Love to Hear From You</div>
     <h1>Contact Us</h1>
