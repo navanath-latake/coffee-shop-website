@@ -30,12 +30,14 @@
 
     *, *::before, *::after { box-sizing: border-box; }
 
-    html, body {
+    html {
       overflow-x: hidden;
-      max-width: 100%;
+      scroll-behavior: smooth;
     }
 
-    html { scroll-behavior: smooth; }
+    body {
+      overflow-x: clip;
+    }
 
     body {
       font-family: 'Lato', sans-serif;
@@ -52,7 +54,7 @@
 
     /* -- Horizontal Scroll Fix -- */
     .row { margin-left: 0 !important; margin-right: 0 !important; }
-    .container-fluid { padding-left: 0 !important; padding-right: 0 !important; overflow-x: hidden; }
+    .container-fluid { padding-left: 0 !important; padding-right: 0 !important; }
     img { max-width: 100%; }
 
     /* ── Scrollbar ── */
@@ -68,6 +70,7 @@
       min-height: 68px;
       border-bottom: 2px solid var(--caramel);
       box-shadow: 0 2px 20px rgba(0,0,0,.4);
+      overflow: visible !important;
     }
 
     .navbar-brand {
@@ -106,6 +109,8 @@
       box-shadow: var(--shadow);
       padding: 8px 0;
       animation: dropFade .2s ease;
+      z-index: 9999 !important;
+      position: absolute !important;
     }
 
     @keyframes dropFade {
