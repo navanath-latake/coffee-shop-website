@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block head %}
+<!-- Include Bootstrap CSS for styling -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+{% endblock %}
+
+{% block title %}My Products{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="mt-5"> Types of Coffee's</h1>
+        <div class="row">
+            {% for product in products %}
+                <div class="col-md-4">
+                    <div class="card mb-4" width='250px' height='250px'>
+                        <img class="card-img-top" height='234px' src="{{product.image.url}}" alt="{{product.product_name}}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.product_name }}</h5>
+                            {% comment %} <p class="card-text">{{ product.description }}</p> {% endcomment %}
+                            <p class="card-text"><strong>Price:</strong>{{ product.price }}</p>
+                            <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary">Add To Cart</a>
+                            <a href="{% url 'product_detail' product.id %}" class="btn btn-primary">View Product</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

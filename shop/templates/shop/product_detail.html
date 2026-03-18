@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block head %}
+<!-- Include Bootstrap CSS for styling -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+{% endblock %}
+
+{% block title %}Product Detail{% endblock %}
+
+{% block body %}
+<div class="container mb-3 mt-3 ">
+    <div class="row">
+        <div>
+        <img class="card-img-top" height='500px' src="{{product.image.url}}" alt="{{product.product_name}}">
+            <div class="cart-body">
+                <h1 class="card-title">{{ product.product_name }}</h1>
+                <h4 class="cart-title">{{ product.category }}</h4>
+                <p class="cart-text">{{ product.description }}</p>
+                <p class="cart-text">{{ product.ingredients }}</p>
+                <p class="cart-text"><b>Price: Rs{{ product.price }}</b></p>
+                <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary">Add to Cart</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

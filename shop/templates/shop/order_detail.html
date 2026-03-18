@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block head %}
+<!-- Include Bootstrap CSS for styling -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+{% endblock %}
+
+{% block title %}Order Detail{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1 class="mt-4">Order {{ order.id }}</h1>
+    <div class="row mb-4">
+    <p>User: {{ order.user.username }}</p>
+    <div>
+        <p>Items:</p>
+        <ul>
+            {% for item in order_items.all %}
+                <li><b>{{ item.product.product_name }}</b> - <b>Quantity:-</b> {{ item.quantity }} - Price:- {{ item.price }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <p>Total Price: {{ order.total_price }}</p>
+    {% if delivery %}
+            <h2>Delivery Details</h2>
+            <p>Address: {{ delivery.address }}</p>
+            <p>City: {{ delivery.city }}</p>
+            <p>State: {{ delivery.state }}</p>
+            <p>Postal Code: {{ delivery.postal_code }}</p>
+            <p>Delivered: {{ delivery.delivered }}</p>
+    {% else %}
+        <p>No delivery details available.</p>
+    {% endif %}
+    {% comment %} <p>Status: {{ order.get_status_display }}</p>
+    <p>Created At: {{ order.created_at }}</p>
+    <p>Updated At: {{ order.updated_at }}</p> {% endcomment %}
+    <form method="post">
+        {% csrf_token %}
+        {% if order.status == 'PENDING' %}
+            <button type="submit" name="action" value="accept" class="btn btn-primary">Accept Order</button>
+            <button type="submit" name="action" value="reject" class="btn btn-primary">Reject Order</button>
+        {% elif order.status == 'ACCEPTED' %}
+            <button type="submit" name="action" value="deliver" class="btn btn-primary">Mark as Delivered</button>
+        {% endif %}
+    </form>
+    </div>
+</div>
+{% endblock %}

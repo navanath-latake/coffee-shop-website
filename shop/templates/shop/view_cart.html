@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block head %}
+<!-- Include Bootstrap CSS for styling -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+{% endblock %}
+
+{% block title %}View Cart{% endblock %}
+
+{% block body %}
+<div class ="container pb-5" >
+    <h1 class="mt-5">View Your Cart</h1>
+    <ul>
+        {% for item in cart_items %}
+            <li>{{ item.product.product_name }}({{ item.quantity }}) - {{ item.total_price }}</li>
+        {% endfor %}
+    </ul>
+    <p class="card-text"><b>Total Price:- Rs {{ total_price }}</b></p>
+    <a href="{% url "place_order" %}" class="btn btn-primary">Place Order</a>
+    <a href="{% url "product_list" %}" class="btn btn-primary">Add Product</a>
+</div>
+{% endblock %}
