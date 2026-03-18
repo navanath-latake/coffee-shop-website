@@ -30,6 +30,11 @@
 
     *, *::before, *::after { box-sizing: border-box; }
 
+    html, body {
+      overflow-x: hidden;
+      max-width: 100%;
+    }
+
     html { scroll-behavior: smooth; }
 
     body {
@@ -44,6 +49,11 @@
 
     h1,h2,h3,h4,h5,h6 { font-family:'Playfair Display',serif; color:var(--roast); }
     a { text-decoration:none; color:inherit; transition:color var(--t); }
+
+    /* -- Horizontal Scroll Fix -- */
+    .row { margin-left: 0 !important; margin-right: 0 !important; }
+    .container-fluid { padding-left: 0 !important; padding-right: 0 !important; overflow-x: hidden; }
+    img { max-width: 100%; }
 
     /* ── Scrollbar ── */
     ::-webkit-scrollbar{width:7px}
