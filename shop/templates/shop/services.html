@@ -1,7 +1,265 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Services{% endblock title %}
 
+{% block head %}
+<style>
+  .page-hero {
+    background: linear-gradient(135deg, #1a0a00 0%, #3b1f0c 100%);
+    padding: 70px 0 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 50%, rgba(192,121,64,.12) 0%, transparent 55%),
+                radial-gradient(circle at 70% 50%, rgba(107,58,42,.12) 0%, transparent 55%);
+  }
+
+  .page-hero .eyebrow {
+    font-size: .75rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: #c07940;
+    font-weight: 700;
+    margin-bottom: 10px;
+    position: relative;
+  }
+
+  .page-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    color: #f5ead8;
+    margin-bottom: 14px;
+    position: relative;
+  }
+
+  .page-hero p {
+    color: rgba(245,234,216,.6);
+    font-style: italic;
+    position: relative;
+    margin: 0;
+  }
+
+  /* Services Grid */
+  .services-section { padding: 64px 0 80px; }
+
+  .service-card {
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(60,20,10,.1);
+    transition: transform .35s ease, box-shadow .35s ease;
+    text-align: center;
+    padding: 40px 28px 36px;
+    height: 100%;
+  }
+
+  .service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(60,20,10,.18);
+  }
+
+  .service-card .icon-wrap {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, #3b1f0c, #6b3a2a);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 1.6rem;
+    color: #d4a055;
+    box-shadow: 0 4px 14px rgba(59,31,12,.3);
+    transition: transform .3s ease;
+  }
+
+  .service-card:hover .icon-wrap { transform: scale(1.1) rotate(-5deg); }
+
+  .service-card h5 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: #3b1f0c;
+    margin-bottom: 12px;
+  }
+
+  .service-card p {
+    font-size: .87rem;
+    color: #7a5c48;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .service-card .tag {
+    display: inline-block;
+    background: rgba(192,121,64,.1);
+    border: 1px solid rgba(192,121,64,.25);
+    color: #6b3a2a;
+    border-radius: 30px;
+    font-size: .74rem;
+    font-weight: 700;
+    padding: 4px 14px;
+    letter-spacing: .06em;
+  }
+
+  /* CTA section */
+  .cta-section {
+    background: linear-gradient(135deg, #3b1f0c, #6b3a2a);
+    border-radius: 20px;
+    padding: 56px 40px;
+    text-align: center;
+    margin: 0 0 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(212,160,85,.15) 0%, transparent 65%);
+  }
+
+  .cta-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: #f5ead8;
+    margin-bottom: 12px;
+    position: relative;
+  }
+
+  .cta-section p {
+    color: rgba(245,234,216,.7);
+    font-style: italic;
+    margin-bottom: 28px;
+    position: relative;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #c07940;
+    color: #1a0a00;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 14px 32px;
+    border-radius: 30px;
+    transition: background .3s ease, transform .3s ease;
+    position: relative;
+  }
+
+  .cta-btn:hover { background: #d4a055; transform: translateY(-2px); color: #1a0a00; }
+
+  /* Stagger */
+  .stagger-card {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: cardUp .5s ease forwards;
+  }
+  @keyframes cardUp { to { opacity:1; transform:translateY(0); } }
+  .stagger-card:nth-child(1){animation-delay:.06s}
+  .stagger-card:nth-child(2){animation-delay:.13s}
+  .stagger-card:nth-child(3){animation-delay:.20s}
+  .stagger-card:nth-child(4){animation-delay:.27s}
+  .stagger-card:nth-child(5){animation-delay:.34s}
+  .stagger-card:nth-child(6){animation-delay:.41s}
+  .stagger-card:nth-child(7){animation-delay:.48s}
+</style>
+{% endblock head %}
+
 {% block body %}
 
-{% endblock body %}
+<!-- Hero -->
+<div class="page-hero">
+  <div class="eyebrow">What We Offer</div>
+  <h1>Our Services</h1>
+  <p>Crafted with care, served with warmth</p>
+</div>
+
+<!-- Services -->
+<div class="container services-section">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 mb-5">
+
+    <div class="col stagger-card">
+      <div class="service-card">
+        <div class="icon-wrap"><i class="fas fa-mug-hot"></i></div>
+        <h5>Coffea Arabica</h5>
+        <p>Our premium Arabica beans deliver a naturally sweet, smooth cup with a delicate floral aroma you'll love.</p>
+        <span class="tag">Signature</span>
+      </div>
+    </div>
+
+    <div class="col stagger-card">
+      <div class="service-card">
+        <div class="icon-wrap"><i class="fas fa-coffee"></i></div>
+        <h5>Latte</h5>
+        <p>Silky steamed milk poured over rich espresso, topped with a smooth layer of velvety foam. Pure comfort.</p>
+        <span class="tag">Best Seller</span>
+      </div>
+    </div>
+
+    <div class="col stagger-card">
+      <div class="service-card">
+        <div class="icon-wrap"><i class="fas fa-star"></i></div>
+        <h5>Cappuccino</h5>
+        <p>The iconic Italian classic — espresso, steamed milk, and a cloud of foam in perfect proportion.</p>
+        <span class="tag">Classic</span>
+      </div>
+    </div>
+
+    <div class="col stagger-card">
+      <div class="service-card">
+        <div class="icon-wrap"><i class="fas fa-tint"></i></div>
+        <h5>Americano</h5>
+        <p>Bold espresso extended with hot water — clean, smooth, and endlessly satisfying all day long.</p>
+        <span class="tag">Bold</span>
+      </div>
+    </div>
+
+    <div class="col stagger-card">
+      <div class="service-card">
+        <div class="icon-wrap"><i class="fas fa-leaf"></i></div>
+        <h5>Indian Filter Coffee</h5>
+        <p>70% Arabica and 30% Chicory — a beloved South Indian tradition brewed to perfection in every cup.</p>
+        <span class="tag">Traditional</span>
+      </div>
+    </div>
+
+    <div class="col stagger-card">
+      <div class="service-card">
+        <div class="icon-wrap"><i class="fas fa-fire"></i></div>
+        <h5>Turkish Coffee</h5>
+        <p>Finely ground beans simmered in a copper cezve — an ancient ritual delivering unmatched intensity.</p>
+        <span class="tag">Heritage</span>
+      </div>
+    </div>
+
+    <div class="col stagger-card">
+      <div class="service-card">
+        <div class="icon-wrap"><i class="fas fa-heart"></i></div>
+        <h5>Mocha</h5>
+        <p>Espresso meets chocolate in this richly indulgent cup — our most beloved treat for the sweet tooth.</p>
+        <span class="tag">Indulgent</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <h2>Ready to Order?</h2>
+    <p>Browse our full menu and add your favourites to the cart.</p>
+    <a href="{% url 'product_list' %}" class="cta-btn">
+      <i class="fas fa-mug-hot"></i> View Full Menu
+    </a>
+  </div>
+</div>
+
+{% endblock body %}
