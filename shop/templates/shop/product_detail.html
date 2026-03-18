@@ -1,26 +1,265 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ product.product_name }}{% endblock %}
 
 {% block head %}
-<!-- Include Bootstrap CSS for styling -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<style>
+  .detail-section { padding: 56px 0 80px; }
+
+  .breadcrumb-bar {
+    background: #f0e4d0;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(192,121,64,.2);
+  }
+
+  .breadcrumb-bar .container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: .85rem;
+    color: #7a5c48;
+  }
+
+  .breadcrumb-bar a { color: #c07940; font-weight: 600; }
+  .breadcrumb-bar a:hover { color: #3b1f0c; }
+  .breadcrumb-bar i { font-size: .6rem; color: #c07940; }
+
+  /* Image */
+  .product-img-wrap {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(60,20,10,.2);
+    position: relative;
+  }
+
+  .product-img-wrap img {
+    width: 100%;
+    height: 480px;
+    object-fit: cover;
+    display: block;
+    transition: transform .5s ease;
+  }
+
+  .product-img-wrap:hover img { transform: scale(1.03); }
+
+  .product-img-wrap .category-badge {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    background: rgba(26,10,0,.75);
+    color: #d4a055;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 30px;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(212,160,85,.3);
+  }
+
+  /* Info */
+  .product-info { padding-left: 20px; }
+
+  .product-info .product-category {
+    font-size: .75rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #c07940;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .product-info h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    color: #3b1f0c;
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .product-info .price-display {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #c07940;
+    margin: 18px 0 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .product-info .price-display span {
+    font-size: .9rem;
+    color: #7a5c48;
+    font-weight: 400;
+  }
+
+  .product-info .divider {
+    width: 48px; height: 3px;
+    background: linear-gradient(90deg, #c07940, #d4a055);
+    border-radius: 2px;
+    margin: 16px 0 22px;
+  }
+
+  .info-label {
+    font-size: .72rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #c07940;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .info-text {
+    font-size: .92rem;
+    color: #5a3d2b;
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .ingredients-box {
+    background: #fdf6ec;
+    border: 1px solid rgba(192,121,64,.25);
+    border-left: 4px solid #c07940;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 28px;
+  }
+
+  .ingredients-box .info-label { margin-bottom: 8px; }
+  .ingredients-box .info-text { margin: 0; }
+
+  .btn-cart-large {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #3b1f0c;
+    color: #f5ead8;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 14px 32px;
+    letter-spacing: .04em;
+    transition: background .3s ease, transform .3s ease, box-shadow .3s ease;
+    text-decoration: none;
+  }
+
+  .btn-cart-large:hover {
+    background: #c07940;
+    color: #1a0a00;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(192,121,64,.35);
+  }
+
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1.5px solid #c07940;
+    color: #c07940;
+    background: transparent;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: .9rem;
+    padding: 13px 24px;
+    transition: background .3s ease, color .3s ease;
+    text-decoration: none;
+    margin-left: 12px;
+  }
+
+  .btn-back:hover { background: rgba(192,121,64,.1); color: #3b1f0c; }
+
+  /* Meta chips */
+  .meta-chips { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+
+  .meta-chip {
+    background: rgba(192,121,64,.1);
+    border: 1px solid rgba(192,121,64,.3);
+    color: #6b3a2a;
+    border-radius: 30px;
+    font-size: .78rem;
+    font-weight: 700;
+    padding: 5px 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .meta-chip i { color: #c07940; }
+
+  /* Animate */
+  .fade-in-up {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp .55s ease .1s forwards;
+  }
+  @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+</style>
 {% endblock %}
 
-{% block title %}Product Detail{% endblock %}
-
 {% block body %}
-<div class="container mb-3 mt-3 ">
-    <div class="row">
-        <div>
-        <img class="card-img-top" height='500px' src="{{product.image.url}}" alt="{{product.product_name}}">
-            <div class="cart-body">
-                <h1 class="card-title">{{ product.product_name }}</h1>
-                <h4 class="cart-title">{{ product.category }}</h4>
-                <p class="cart-text">{{ product.description }}</p>
-                <p class="cart-text">{{ product.ingredients }}</p>
-                <p class="cart-text"><b>Price: Rs{{ product.price }}</b></p>
-                <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary">Add to Cart</a>
-            </div>
-        </div>
-    </div>
+
+<!-- Breadcrumb -->
+<div class="breadcrumb-bar">
+  <div class="container">
+    <a href="/">Home</a>
+    <i class="fas fa-chevron-right"></i>
+    <a href="{% url 'product_list' %}">Menu</a>
+    <i class="fas fa-chevron-right"></i>
+    <span>{{ product.product_name }}</span>
+  </div>
 </div>
-{% endblock %}
+
+<!-- Detail -->
+<div class="container detail-section">
+  <div class="row align-items-start g-5">
+
+    <!-- Image -->
+    <div class="col-md-6 fade-in-up">
+      <div class="product-img-wrap">
+        <img src="{{ product.image.url }}" alt="{{ product.product_name }}">
+        <span class="category-badge">{{ product.category }}</span>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="col-md-6 fade-in-up product-info" style="animation-delay:.2s">
+      <div class="product-category">{{ product.category }}</div>
+      <h1>{{ product.product_name }}</h1>
+      <div class="divider"></div>
+
+      <div class="meta-chips">
+        <span class="meta-chip"><i class="fas fa-clock"></i> Ready in 9 mins</span>
+        <span class="meta-chip"><i class="fas fa-fire"></i> Hot &amp; Fresh</span>
+        <span class="meta-chip"><i class="fas fa-leaf"></i> Organic</span>
+      </div>
+
+      <div class="price-display">₹{{ product.price }} <span>per cup</span></div>
+
+      <div class="info-label">Description</div>
+      <div class="info-text">{{ product.description }}</div>
+
+      {% if product.ingredients %}
+      <div class="ingredients-box">
+        <div class="info-label"><i class="fas fa-list-ul me-1"></i> Ingredients</div>
+        <div class="info-text">{{ product.ingredients }}</div>
+      </div>
+      {% endif %}
+
+      <div class="d-flex align-items-center flex-wrap gap-2">
+        <a href="{% url 'add_to_cart' product.id %}" class="btn-cart-large">
+          <i class="fas fa-shopping-bag"></i> Add to Cart
+        </a>
+        <a href="{% url 'product_list' %}" class="btn-back">
+          <i class="fas fa-arrow-left"></i> Back to Menu
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
