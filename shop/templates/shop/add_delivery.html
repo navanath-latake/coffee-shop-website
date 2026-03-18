@@ -1,22 +1,289 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Add Delivery Details</title>
-    <!-- Include Bootstrap CSS for styling (optional) -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Add Delivery Details for Order #{{ order.id }}</h1>
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Add Delivery Details{% endblock %}
+
+{% block head %}
+<style>
+  .delivery-section { padding: 56px 0 80px; }
+
+  .page-hero-sm {
+    background: linear-gradient(135deg, #1a0a00, #3b1f0c);
+    padding: 44px 0 38px;
+    text-align: center;
+    border-bottom: 2px solid rgba(192,121,64,.25);
+  }
+
+  .page-hero-sm .eyebrow {
+    font-size: .74rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: #c07940;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .page-hero-sm h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: #f5ead8;
+    margin: 0;
+  }
+
+  /* Order badge */
+  .order-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(192,121,64,.15);
+    border: 1px solid rgba(192,121,64,.3);
+    color: #d4a055;
+    font-size: .82rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    padding: 6px 18px;
+    border-radius: 30px;
+    margin-top: 12px;
+    position: relative;
+  }
+
+  /* Form Card */
+  .delivery-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(60,20,10,.12);
+    padding: 40px 44px;
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp .55s ease .05s forwards;
+  }
+
+  @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+
+  .delivery-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: #3b1f0c;
+    margin-bottom: 6px;
+  }
+
+  .delivery-card .sub {
+    font-size: .87rem;
+    color: #7a5c48;
+    font-style: italic;
+    margin-bottom: 28px;
+  }
+
+  .form-label {
+    font-size: .72rem;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #6b3a2a;
+    margin-bottom: 6px;
+  }
+
+  .form-control, .form-select, textarea {
+    border: 1.5px solid rgba(192,121,64,.25);
+    border-radius: 9px;
+    padding: 11px 15px;
+    font-size: .92rem;
+    color: #3b1f0c;
+    background: #fdf6ec;
+    font-family: 'Lato', sans-serif;
+    transition: border-color .3s ease, box-shadow .3s ease;
+    width: 100%;
+  }
+
+  .form-control:focus, .form-select:focus, textarea:focus {
+    border-color: #c07940;
+    box-shadow: 0 0 0 3px rgba(192,121,64,.2);
+    background: #fff;
+    outline: none;
+    color: #1a0a00;
+  }
+
+  .form-control::placeholder, textarea::placeholder { color: #b89a82; }
+
+  textarea { resize: vertical; min-height: 100px; }
+
+  .btn-submit {
+    background: #3b1f0c;
+    color: #f5ead8;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 13px 36px;
+    letter-spacing: .04em;
+    transition: background .3s ease, transform .3s ease, box-shadow .3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  .btn-submit:hover {
+    background: #c07940;
+    color: #1a0a00;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(192,121,64,.3);
+  }
+
+  /* Info Panel */
+  .info-panel {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(60,20,10,.1);
+    padding: 28px;
+    position: sticky;
+    top: 90px;
+    opacity: 0;
+    transform: translateY(18px);
+    animation: fadeUp .55s ease .15s forwards;
+  }
+
+  .info-panel h5 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: #3b1f0c;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(192,121,64,.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .info-panel h5 i { color: #c07940; }
+
+  .tip-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+    font-size: .85rem;
+    color: #5a3d2b;
+    line-height: 1.6;
+  }
+
+  .tip-item:last-child { margin-bottom: 0; }
+
+  .tip-item i {
+    color: #c07940;
+    font-size: .85rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+
+  .order-info-box {
+    background: #fdf6ec;
+    border: 1px solid rgba(192,121,64,.2);
+    border-left: 4px solid #c07940;
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-top: 20px;
+  }
+
+  .order-info-box .oi-label {
+    font-size: .7rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #c07940;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .order-info-box .oi-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: #3b1f0c;
+    font-weight: 700;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<!-- Hero -->
+<div class="page-hero-sm">
+  <div class="eyebrow">Almost There!</div>
+  <h1><i class="fas fa-truck me-2" style="color:#c07940"></i>Add Delivery Details</h1>
+  <div class="order-badge">
+    <i class="fas fa-receipt"></i> Order #{{ order.id }}
+  </div>
+</div>
+
+<div class="container delivery-section">
+  <div class="row g-5 align-items-start">
+
+    <!-- Form -->
+    <div class="col-lg-7">
+      <div class="delivery-card">
+        <h4>Where should we deliver?</h4>
+        <p class="sub">Fill in your delivery details so we can bring your coffee right to you.</p>
+
         <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Submit</button>
+          {% csrf_token %}
+
+          {% for field in form %}
+          <div class="mb-4">
+            <label class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+              {% for error in field.errors %}
+              <div style="font-size:.78rem;color:#c0392b;margin-top:5px;"><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</div>
+              {% endfor %}
+            {% endif %}
+          </div>
+          {% endfor %}
+
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:8px;">
+            <button type="submit" class="btn-submit">
+              <i class="fas fa-check-circle"></i> Confirm Delivery
+            </button>
+            <a href="{% url 'view_cart' %}" style="color:#7a5c48;font-size:.88rem;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:6px;transition:color .3s ease;" onmouseover="this.style.color='#c07940'" onmouseout="this.style.color='#7a5c48'">
+              <i class="fas fa-arrow-left"></i> Back to Cart
+            </a>
+          </div>
         </form>
+      </div>
     </div>
-    <!-- Include Bootstrap JS and dependencies (optional) -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-</body>
-</html>
+
+    <!-- Tips Panel -->
+    <div class="col-lg-5">
+      <div class="info-panel">
+        <h5><i class="fas fa-info-circle"></i> Delivery Info</h5>
+
+        <div class="tip-item">
+          <i class="fas fa-clock"></i>
+          <span>Estimated delivery time is <strong>20–30 minutes</strong> after order confirmation.</span>
+        </div>
+        <div class="tip-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>Make sure your address is accurate to avoid delays — include landmark if needed.</span>
+        </div>
+        <div class="tip-item">
+          <i class="fas fa-phone"></i>
+          <span>A valid phone number helps our delivery team reach you if needed.</span>
+        </div>
+        <div class="tip-item">
+          <i class="fas fa-mug-hot"></i>
+          <span>Your coffee will be delivered hot and fresh — we pack it with care every time.</span>
+        </div>
+        <div class="tip-item">
+          <i class="fas fa-truck"></i>
+          <span>Free delivery on all orders. No hidden charges.</span>
+        </div>
+
+        <div class="order-info-box">
+          <div class="oi-label">Current Order</div>
+          <div class="oi-val">#{{ order.id }}</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
