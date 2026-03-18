@@ -1,30 +1,215 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}Our Menu{% endblock %}
 
 {% block head %}
-<!-- Include Bootstrap CSS for styling -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+<style>
+  .page-hero {
+    background: linear-gradient(135deg, #1a0a00 0%, #3b1f0c 100%);
+    padding: 60px 0 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 20% 50%, rgba(192,121,64,.15) 0%, transparent 50%),
+                      radial-gradient(circle at 80% 50%, rgba(107,58,42,.15) 0%, transparent 50%);
+  }
+
+  .page-hero .eyebrow {
+    font-size: .78rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #c07940;
+    font-weight: 700;
+    margin-bottom: 10px;
+    position: relative;
+  }
+
+  .page-hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    color: #f5ead8;
+    margin-bottom: 12px;
+    position: relative;
+  }
+
+  .page-hero p {
+    color: rgba(245,234,216,.65);
+    font-style: italic;
+    font-size: 1rem;
+    position: relative;
+    margin: 0;
+  }
+
+  /* Grid */
+  .products-section { padding: 56px 0 72px; }
+
+  .product-card {
+    border: none;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 3px 14px rgba(60,20,10,.1);
+    transition: transform .35s ease, box-shadow .35s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 36px rgba(60,20,10,.18);
+  }
+
+  .product-card .img-wrap {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .product-card img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    transition: transform .45s ease;
+    display: block;
+  }
+
+  .product-card:hover img { transform: scale(1.07); }
+
+  .product-card .card-body {
+    padding: 20px 22px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .product-card .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: #3b1f0c;
+    margin-bottom: 6px;
+  }
+
+  .product-card .price-tag {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #c07940;
+    margin-bottom: 16px;
+  }
+
+  .product-card .price-tag span {
+    font-size: .78rem;
+    color: #7a5c48;
+    font-weight: 400;
+    margin-left: 2px;
+  }
+
+  .product-card .btn-group-custom {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+  }
+
+  .btn-add-cart {
+    flex: 1;
+    background: #3b1f0c;
+    color: #f5ead8;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: .85rem;
+    padding: 9px 0;
+    letter-spacing: .04em;
+    transition: background .3s ease, transform .3s ease;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .btn-add-cart:hover { background: #c07940; color: #1a0a00; transform: translateY(-1px); }
+
+  .btn-view-detail {
+    background: transparent;
+    border: 1.5px solid #c07940;
+    color: #c07940;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: .85rem;
+    padding: 9px 16px;
+    transition: background .3s ease, color .3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .btn-view-detail:hover { background: #c07940; color: #1a0a00; }
+
+  /* Stagger */
+  .stagger-card {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: cardUp .5s ease forwards;
+  }
+  @keyframes cardUp { to { opacity:1; transform:translateY(0); } }
+  .stagger-card:nth-child(1){animation-delay:.05s}
+  .stagger-card:nth-child(2){animation-delay:.12s}
+  .stagger-card:nth-child(3){animation-delay:.19s}
+  .stagger-card:nth-child(4){animation-delay:.26s}
+  .stagger-card:nth-child(5){animation-delay:.33s}
+  .stagger-card:nth-child(6){animation-delay:.40s}
+</style>
 {% endblock %}
 
-{% block title %}My Products{% endblock %}
-
 {% block body %}
-    <div class="container">
-        <h1 class="mt-5"> Types of Coffee's</h1>
-        <div class="row">
-            {% for product in products %}
-                <div class="col-md-4">
-                    <div class="card mb-4" width='250px' height='250px'>
-                        <img class="card-img-top" height='234px' src="{{product.image.url}}" alt="{{product.product_name}}">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ product.product_name }}</h5>
-                            {% comment %} <p class="card-text">{{ product.description }}</p> {% endcomment %}
-                            <p class="card-text"><strong>Price:</strong>{{ product.price }}</p>
-                            <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary">Add To Cart</a>
-                            <a href="{% url 'product_detail' product.id %}" class="btn btn-primary">View Product</a>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
+
+<!-- Hero -->
+<div class="page-hero">
+  <div class="eyebrow">Navanath's Coffee Shop</div>
+  <h1>Types of Coffees</h1>
+  <p>Handcrafted with love — pick your perfect cup</p>
+</div>
+
+<!-- Products -->
+<div class="container products-section">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+    {% for product in products %}
+    <div class="col stagger-card">
+      <div class="product-card">
+        <div class="img-wrap">
+          <img src="{{ product.image.url }}" alt="{{ product.product_name }}">
         </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ product.product_name }}</h5>
+          <div class="price-tag">₹{{ product.price }} <span>per cup</span></div>
+          <div class="btn-group-custom">
+            <a href="{% url 'add_to_cart' product.id %}" class="btn-add-cart">
+              <i class="fas fa-shopping-bag"></i> Add to Cart
+            </a>
+            <a href="{% url 'product_detail' product.id %}" class="btn-view-detail">
+              <i class="fas fa-eye"></i> View
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
-{% endblock %}
+    {% empty %}
+    <div class="col-12 text-center py-5">
+      <i class="fas fa-mug-hot" style="font-size:3rem;color:#c07940;opacity:.4;margin-bottom:16px;display:block;"></i>
+      <p style="color:#7a5c48;font-size:1.1rem;">No products available right now. Check back soon!</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
