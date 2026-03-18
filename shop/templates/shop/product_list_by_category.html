@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ category.name }} | Navanath's Coffee Shop</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root {
+      --espresso:  #1a0a00;
+      --roast:     #3b1f0c;
+      --mocha:     #6b3a2a;
+      --caramel:   #c07940;
+      --cream:     #f5ead8;
+      --foam:      #fdf6ec;
+      --accent:    #d4a055;
+      --muted:     #7a5c48;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Lato', sans-serif;
+      background: var(--foam);
+      color: var(--espresso);
+      line-height: 1.7;
+    }
+
+    h1,h2,h3,h4,h5,h6 { font-family: 'Playfair Display', serif; color: var(--roast); }
+    a { text-decoration: none; color: inherit; transition: color .3s ease; }
+
+    ::-webkit-scrollbar { width: 7px; }
+    ::-webkit-scrollbar-track { background: var(--foam); }
+    ::-webkit-scrollbar-thumb { background: var(--caramel); border-radius: 4px; }
+
+    /* ── Navbar ── */
+    .navbar {
+      background: var(--espresso);
+      padding: 0 28px;
+      min-height: 68px;
+      border-bottom: 2px solid var(--caramel);
+      box-shadow: 0 2px 20px rgba(0,0,0,.4);
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .navbar-brand:hover { color: var(--cream); }
+
+    .back-link {
+      color: rgba(245,234,216,.7);
+      font-size: .88rem;
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color .3s ease;
+    }
+    .back-link:hover { color: var(--caramel); }
+
+    /* ── Breadcrumb ── */
+    .breadcrumb-bar {
+      background: #f0e4d0;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(192,121,64,.2);
+    }
+
+    .breadcrumb-bar .inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .84rem;
+      color: var(--muted);
+    }
+
+    .breadcrumb-bar a { color: var(--caramel); font-weight: 600; }
+    .breadcrumb-bar a:hover { color: var(--roast); }
+    .breadcrumb-bar i { font-size: .58rem; color: var(--caramel); }
+
+    /* ── Page Hero ── */
+    .page-hero {
+      background: linear-gradient(135deg, var(--espresso) 0%, var(--roast) 100%);
+      padding: 56px 0 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 25% 50%, rgba(192,121,64,.13) 0%, transparent 55%),
+                  radial-gradient(circle at 75% 50%, rgba(107,58,42,.13) 0%, transparent 55%);
+    }
+
+    .page-hero .eyebrow {
+      font-size: .74rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--caramel);
+      font-weight: 700;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .page-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.6rem;
+      color: var(--cream);
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .page-hero p {
+      color: rgba(245,234,216,.6);
+      font-style: italic;
+      font-size: .95rem;
+      position: relative;
+      margin: 0;
+    }
+
+    /* ── Products Grid ── */
+    .products-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 56px 24px 80px;
+    }
+
+    .product-card {
+      border: none;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 3px 14px rgba(60,20,10,.1);
+      transition: transform .35s ease, box-shadow .35s ease;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 36px rgba(60,20,10,.18);
+    }
+
+    .product-card .img-wrap {
+      overflow: hidden;
+      position: relative;
+    }
+
+    .product-card .img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(26,10,0,.3), transparent 55%);
+      opacity: 0;
+      transition: opacity .35s ease;
+    }
+
+    .product-card:hover .img-wrap::after { opacity: 1; }
+
+    .product-card img {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+      display: block;
+      transition: transform .45s ease;
+    }
+
+    .product-card:hover img { transform: scale(1.07); }
+
+    .product-card .card-body {
+      padding: 20px 22px 22px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: var(--roast);
+      margin-bottom: 6px;
+    }
+
+    .product-card .card-desc {
+      font-size: .84rem;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 14px;
+      flex: 1;
+    }
+
+    .product-card .price-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .product-card .price {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--caramel);
+    }
+
+    .product-card .price span {
+      font-size: .75rem;
+      color: var(--muted);
+      font-weight: 400;
+      margin-left: 2px;
+    }
+
+    .product-card .btn-group-custom {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-cart {
+      flex: 1;
+      background: var(--roast);
+      color: var(--cream);
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: .84rem;
+      padding: 9px 0;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background .3s ease, transform .3s ease;
+    }
+
+    .btn-cart:hover {
+      background: var(--caramel);
+      color: var(--espresso);
+      transform: translateY(-1px);
+    }
+
+    /* ── Empty State ── */
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      grid-column: 1 / -1;
+    }
+
+    .empty-state i {
+      font-size: 4rem;
+      color: var(--caramel);
+      opacity: .3;
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .empty-state p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin-bottom: 24px;
+    }
+
+    .btn-browse {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--roast);
+      color: var(--cream);
+      font-weight: 700;
+      padding: 12px 28px;
+      border-radius: 10px;
+      transition: background .3s ease;
+    }
+
+    .btn-browse:hover { background: var(--caramel); color: var(--espresso); }
+
+    /* ── Stagger Animation ── */
+    .stagger-card {
+      opacity: 0;
+      transform: translateY(22px);
+      animation: cardUp .5s ease forwards;
+    }
+
+    @keyframes cardUp { to { opacity: 1; transform: translateY(0); } }
+
+    .stagger-card:nth-child(1) { animation-delay: .05s; }
+    .stagger-card:nth-child(2) { animation-delay: .12s; }
+    .stagger-card:nth-child(3) { animation-delay: .19s; }
+    .stagger-card:nth-child(4) { animation-delay: .26s; }
+    .stagger-card:nth-child(5) { animation-delay: .33s; }
+    .stagger-card:nth-child(6) { animation-delay: .40s; }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--espresso);
+      border-top: 2px solid var(--caramel);
+      padding: 40px 24px 20px;
+      text-align: center;
+    }
+
+    footer p {
+      color: rgba(245,234,216,.35);
+      font-size: .82rem;
+      margin: 0;
+    }
+
+    footer a {
+      color: var(--caramel);
+      font-weight: 600;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .page-hero h1 { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <a class="navbar-brand" href="/">
+      <i class="fas fa-mug-hot" style="color:#c07940"></i> Navanath's Coffee
+    </a>
+    <a href="/" class="back-link">
+      <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+  </nav>
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb-bar">
+    <div class="inner">
+      <a href="/">Home</a>
+      <i class="fas fa-chevron-right"></i>
+      <a href="/services">Menu</a>
+      <i class="fas fa-chevron-right"></i>
+      <span>{{ category.name }}</span>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="page-hero">
+    <div class="eyebrow">Our Collection</div>
+    <h1>{{ category.name }}</h1>
+    <p>Handcrafted with love — explore this category</p>
+  </div>
+
+  <!-- Products -->
+  <div class="products-section">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+      {% for product in products %}
+      <div class="col stagger-card">
+        <div class="product-card">
+          <div class="img-wrap">
+            <!-- No image field in this model, so placeholder shown -->
+            <img src="https://via.placeholder.com/400x230/3b1f0c/f5ead8?text={{ product.name }}" alt="{{ product.name }}">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-desc">{{ product.description }}</p>
+            <div class="price-row">
+              <span class="price">₹{{ product.price }} <span>per cup</span></span>
+            </div>
+            <div class="btn-group-custom">
+              <a href="{% url 'add_to_cart' product.id %}" class="btn-cart">
+                <i class="fas fa-shopping-bag"></i> Add to Cart
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12">
+        <div class="empty-state">
+          <i class="fas fa-mug-hot"></i>
+          <p>No products found in <strong>{{ category.name }}</strong>.<br>Check back soon!</p>
+          <a href="/" class="btn-browse">
+            <i class="fas fa-arrow-left"></i> Back to Home
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 <a href="/">Navanath's Coffee Shop</a>. All rights reserved. Made with <i class="fas fa-heart" style="color:#c07940"></i> & Espresso.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
