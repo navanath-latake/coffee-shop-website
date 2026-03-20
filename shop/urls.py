@@ -16,4 +16,5 @@ urlpatterns = [
     path('add_delivery/<int:order_id>/', views.add_delivery, name='add_delivery'),
     path('accounts/login/', auth_views.LoginView.as_view(template_name='shop/login.html'), name='login'),
     path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
+    path('search/', views.search_products, name='search_products'),
 ]
