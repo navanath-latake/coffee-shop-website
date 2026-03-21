@@ -162,7 +162,6 @@
     opacity: 0;
     transform: translateY(20px);
     animation: cardUp .5s ease forwards;
-    scroll-margin-top: 90px;
   }
   @keyframes cardUp { to { opacity:1; transform:translateY(0); } }
   .stagger-card:nth-child(1){animation-delay:.06s}
@@ -172,14 +171,6 @@
   .stagger-card:nth-child(5){animation-delay:.34s}
   .stagger-card:nth-child(6){animation-delay:.41s}
   .stagger-card:nth-child(7){animation-delay:.48s}
-
-  /* Highlight when navigated via anchor */
-  .stagger-card.highlight .service-card {
-    outline: 2px solid #c07940;
-    outline-offset: 3px;
-    box-shadow: 0 0 0 6px rgba(192,121,64,.18), 0 16px 40px rgba(60,20,10,.2);
-    transform: translateY(-10px);
-  }
 </style>
 {% endblock head %}
 
@@ -196,7 +187,7 @@
 <div class="container services-section">
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 mb-5">
 
-    <div class="col stagger-card" id="coffea-arabica">
+    <div class="col stagger-card">
       <div class="service-card">
         <div class="icon-wrap"><i class="fas fa-mug-hot"></i></div>
         <h5>Coffea Arabica</h5>
@@ -205,7 +196,7 @@
       </div>
     </div>
 
-    <div class="col stagger-card" id="latte">
+    <div class="col stagger-card">
       <div class="service-card">
         <div class="icon-wrap"><i class="fas fa-coffee"></i></div>
         <h5>Latte</h5>
@@ -214,7 +205,7 @@
       </div>
     </div>
 
-    <div class="col stagger-card" id="cappuccino">
+    <div class="col stagger-card">
       <div class="service-card">
         <div class="icon-wrap"><i class="fas fa-star"></i></div>
         <h5>Cappuccino</h5>
@@ -223,7 +214,7 @@
       </div>
     </div>
 
-    <div class="col stagger-card" id="americano">
+    <div class="col stagger-card">
       <div class="service-card">
         <div class="icon-wrap"><i class="fas fa-tint"></i></div>
         <h5>Americano</h5>
@@ -232,7 +223,7 @@
       </div>
     </div>
 
-    <div class="col stagger-card" id="indian-filter-coffee">
+    <div class="col stagger-card">
       <div class="service-card">
         <div class="icon-wrap"><i class="fas fa-leaf"></i></div>
         <h5>Indian Filter Coffee</h5>
@@ -241,7 +232,7 @@
       </div>
     </div>
 
-    <div class="col stagger-card" id="turkish-coffee">
+    <div class="col stagger-card">
       <div class="service-card">
         <div class="icon-wrap"><i class="fas fa-fire"></i></div>
         <h5>Turkish Coffee</h5>
@@ -250,7 +241,7 @@
       </div>
     </div>
 
-    <div class="col stagger-card" id="mocha">
+    <div class="col stagger-card">
       <div class="service-card">
         <div class="icon-wrap"><i class="fas fa-heart"></i></div>
         <h5>Mocha</h5>
@@ -272,24 +263,3 @@
 </div>
 
 {% endblock body %}
-
-{% block scripts %}
-<script>
-  // Highlight the card whose id matches the URL hash
-  function highlightAnchor() {
-    const hash = window.location.hash.slice(1);
-    if (!hash) return;
-    const target = document.getElementById(hash);
-    if (!target) return;
-    // Scroll into view (offset accounted by scroll-margin-top in CSS)
-    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    // Add highlight class briefly
-    target.classList.add('highlight');
-    setTimeout(() => target.classList.remove('highlight'), 2200);
-  }
-  // Run on page load (after animation frames settle)
-  window.addEventListener('load', () => setTimeout(highlightAnchor, 550));
-  // Also run if hash changes without page reload
-  window.addEventListener('hashchange', highlightAnchor);
-</script>
-{% endblock scripts %}

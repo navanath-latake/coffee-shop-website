@@ -425,7 +425,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for item in order_items %}
+              {% for item in order.items.all %}
               <tr>
                 <td>
                   <div class="item-name">{{ item.product.product_name }}</div>
@@ -438,12 +438,19 @@
                 <td style="text-align:right" class="price-cell">₹{{ item.total_price }}</td>
               </tr>
               {% empty %}
+              {% for item in order_items %}
               <tr>
-                <td colspan="4" style="text-align:center; color:#7a5c48; padding:2rem 1rem; font-style:italic;">
-                  <i class="fas fa-mug-hot me-2" style="color:#c07940;"></i>No items found for this order.
+                <td>
+                  <div class="item-name">{{ item.product.product_name }}</div>
                 </td>
+                <td style="text-align:center">
+                  <span class="qty-pill">× {{ item.quantity }}</span>
+                </td>
+                <td style="text-align:right" class="price-cell">₹{{ item.product.price }}</td>
+                <td style="text-align:right" class="price-cell">₹{{ item.total_price }}</td>
               </tr>
               {% endfor %}
+              {% endempty %}
             </tbody>
             <tfoot>
               <tr class="total-row">
