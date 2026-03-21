@@ -129,6 +129,8 @@
     }
     .cart-btn:hover { background: var(--accent); transform: translateY(-1px); }
 
+    .search-wrap { position: relative; }
+
     .search-form { display: flex; gap: 6px; }
 
     .search-form input {
@@ -138,6 +140,7 @@
       border-radius: 8px;
       padding: 6px 14px;
       font-size: .88rem;
+      width: 200px;
       transition: border-color var(--t), box-shadow var(--t);
     }
     .search-form input::placeholder { color: rgba(245,234,216,.5); }
@@ -160,6 +163,57 @@
       transition: background var(--t), color var(--t);
     }
     .search-form button:hover { background: var(--caramel); color: var(--espresso); }
+
+    /* ── Search Dropdown ── */
+    .search-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 300px;
+      background: var(--roast);
+      border: 1px solid var(--caramel);
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.45);
+      z-index: 9999;
+      overflow: hidden;
+      animation: dropFade .2s ease;
+    }
+    .search-dropdown.open { display: block; }
+
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 18px;
+      color: var(--cream);
+      font-size: .88rem;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      transition: background var(--t);
+      text-decoration: none;
+    }
+    .search-result-item:last-child { border-bottom: none; }
+    .search-result-item:hover { background: var(--caramel); color: var(--espresso); }
+    .search-result-item:hover .search-result-price { color: var(--espresso); }
+
+    .search-result-name { font-weight: 600; }
+    .search-result-cat  { font-size: .75rem; color: rgba(245,234,216,.5); margin-top: 2px; }
+    .search-result-price { font-weight: 700; color: var(--caramel); font-size: .9rem; white-space: nowrap; }
+
+    .search-no-results {
+      padding: 16px 18px;
+      color: rgba(245,234,216,.5);
+      font-size: .85rem;
+      font-style: italic;
+      text-align: center;
+    }
+    .search-loading {
+      padding: 14px 18px;
+      color: rgba(245,234,216,.5);
+      font-size: .82rem;
+      text-align: center;
+    }
 
     /* ── Alerts ── */
     .alert {
@@ -298,10 +352,19 @@
               Cart <span style="background:var(--roast);color:var(--cream);border-radius:50%;width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;">{{ cart_quantity }}</span>
             </button>
           </a>
-          <form class="search-form" role="search">
-            <input type="search" placeholder="Search coffee…" aria-label="Search">
-            <button type="submit"><i class="fas fa-search"></i></button>
-          </form>
+          <div class="search-wrap">
+            <form class="search-form" role="search" onsubmit="return false;">
+              <input
+                type="search"
+                id="searchInput"
+                placeholder="Search coffee…"
+                aria-label="Search"
+                autocomplete="off"
+              >
+              <button type="button" onclick="triggerSearch()"><i class="fas fa-search"></i></button>
+            </form>
+            <div class="search-dropdown" id="searchDropdown"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -374,5 +437,70 @@
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   {% block scripts %}{% endblock scripts %}
+
+  <script>
+    const searchInput    = document.getElementById('searchInput');
+    const searchDropdown = document.getElementById('searchDropdown');
+    let searchTimer = null;
+
+    // Live search on every keystroke (debounced 300ms)
+    searchInput.addEventListener('input', function () {
+      clearTimeout(searchTimer);
+      const q = this.value.trim();
+      if (!q) { closeDropdown(); return; }
+      searchDropdown.innerHTML = '<div class="search-loading"><i class="fas fa-spinner fa-spin me-2"></i>Searching…</div>';
+      openDropdown();
+      searchTimer = setTimeout(() => fetchSearch(q), 300);
+    });
+
+    // Also search on Enter key
+    searchInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') { clearTimeout(searchTimer); fetchSearch(this.value.trim()); }
+      if (e.key === 'Escape') closeDropdown();
+    });
+
+    // Search button click
+    function triggerSearch() {
+      const q = searchInput.value.trim();
+      if (q) fetchSearch(q);
+    }
+
+    function fetchSearch(q) {
+      if (!q) { closeDropdown(); return; }
+      fetch(`/search/?q=${encodeURIComponent(q)}`)
+        .then(r => r.json())
+        .then(data => renderResults(data.results, q))
+        .catch(() => {
+          searchDropdown.innerHTML = '<div class="search-no-results"><i class="fas fa-exclamation-circle me-2"></i>Something went wrong.</div>';
+          openDropdown();
+        });
+    }
+
+    function renderResults(results, q) {
+      if (!results || results.length === 0) {
+        searchDropdown.innerHTML = `<div class="search-no-results"><i class="fas fa-coffee me-2"></i>No coffee found for "<strong>${q}</strong>"</div>`;
+        openDropdown();
+        return;
+      }
+      searchDropdown.innerHTML = results.map(p => `
+        <a class="search-result-item" href="/products/${p.id}/">
+          <div>
+            <div class="search-result-name">${p.product_name}</div>
+            <div class="search-result-cat">${p.category}</div>
+          </div>
+          <div class="search-result-price">₹${p.price}</div>
+        </a>
+      `).join('');
+      openDropdown();
+    }
+
+    function openDropdown()  { searchDropdown.classList.add('open'); }
+    function closeDropdown() { searchDropdown.classList.remove('open'); searchDropdown.innerHTML = ''; }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.search-wrap')) closeDropdown();
+    });
+  </script>
 </body>
 </html>
