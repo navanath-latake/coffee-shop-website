@@ -193,9 +193,9 @@
           <h5 class="card-title">{{ product.product_name }}</h5>
           <div class="price-tag">₹{{ product.price }} <span>per cup</span></div>
           <div class="btn-group-custom">
-            <a href="{% url 'add_to_cart' product.id %}" class="btn-add-cart">
+            <button class="btn-add-cart" onclick="addToCart(this, {{ product.id }}, '{{ product.product_name }}')">
               <i class="fas fa-shopping-bag"></i> Add to Cart
-            </a>
+            </button>
             <a href="{% url 'product_detail' product.id %}" class="btn-view-detail">
               <i class="fas fa-eye"></i> View
             </a>
@@ -213,3 +213,84 @@
 </div>
 
 {% endblock %}
+
+{% block scripts %}
+<style>
+  .cart-toast {
+    position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+    background: #1a0a00; color: #f5ead8;
+    padding: 14px 22px; border-radius: 12px;
+    border-left: 4px solid #c07940;
+    font-size: .92rem; font-weight: 600;
+    display: flex; align-items: center; gap: 10px;
+    box-shadow: 0 8px 32px rgba(0,0,0,.35);
+    transform: translateY(100px); opacity: 0;
+    transition: transform .35s ease, opacity .35s ease;
+    pointer-events: none;
+  }
+  .cart-toast.show { transform: translateY(0); opacity: 1; }
+  .cart-toast i { color: #c07940; }
+  .btn-add-cart.loading { opacity: .7; pointer-events: none; }
+  .btn-add-cart.added { background: #4a7c3f !important; color: #fff !important; }
+</style>
+
+<div class="cart-toast" id="cartToast">
+  <i class="fas fa-check-circle"></i>
+  <span id="cartToastMsg">Added to cart!</span>
+</div>
+
+<script>
+  function addToCart(btn, productId, productName) {
+    btn.classList.add('loading');
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding…';
+
+    fetch('/add_to_cart/' + productId + '/', {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken'),
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    })
+    .then(r => r.json())
+    .then(data => {
+      btn.classList.remove('loading');
+      btn.classList.add('added');
+      btn.innerHTML = '<i class="fas fa-check"></i> Added!';
+
+      const cartBadge = document.querySelector('.cart-btn span');
+      if (cartBadge && data.cart_quantity !== undefined) {
+        cartBadge.textContent = data.cart_quantity;
+      }
+
+      showToast(productName + ' added to cart!');
+
+      setTimeout(() => {
+        btn.classList.remove('added');
+        btn.innerHTML = '<i class="fas fa-shopping-bag"></i> Add to Cart';
+      }, 2000);
+    })
+    .catch(() => {
+      btn.classList.remove('loading');
+      btn.innerHTML = '<i class="fas fa-shopping-bag"></i> Add to Cart';
+      showToast('Please log in to add items to cart.', true);
+    });
+  }
+
+  function showToast(msg, isError) {
+    const toast = document.getElementById('cartToast');
+    document.getElementById('cartToastMsg').textContent = msg;
+    toast.style.borderLeftColor = isError ? '#c0402a' : '#c07940';
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+  function getCookie(name) {
+    let value = null;
+    document.cookie.split(';').forEach(c => {
+      const parts = c.trim().split('=');
+      if (parts[0] === name) value = decodeURIComponent(parts[1]);
+    });
+    return value;
+  }
+</script>
+{% endblock scripts %}

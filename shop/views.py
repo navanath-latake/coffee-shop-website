@@ -46,8 +46,22 @@ def add_to_cart(request, product_id):
         cart_item.quantity += 1
         cart_item.save()
 
-    messages.success(request, f"{product.product_name} added to cart!")  # FIX: added feedback message
-    return redirect('view_cart')
+    cart_quantity = CartItem.objects.filter(cart=cart).count()
+
+    # AJAX request → return JSON (no page reload)
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'success': True,
+            'message': f"{product.product_name} added to cart!",
+            'cart_quantity': cart_quantity,
+        })
+
+    # Normal request → redirect back to referring page
+    messages.success(request, f"{product.product_name} added to cart!")
+    referer = request.META.get('HTTP_REFERER')
+    if referer:
+        return redirect(referer)
+    return redirect('product_list')
 
 
 @login_required
