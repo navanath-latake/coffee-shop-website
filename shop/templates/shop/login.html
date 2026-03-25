@@ -1,22 +1,192 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-    <!-- Include Bootstrap CSS for styling (optional) -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container">
-        <h1 class="mt-5">Login</h1>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock title %}
+
+{% block body %}
+<style>
+  .login-wrapper {
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+    background-image:
+      radial-gradient(ellipse at 15% 20%, rgba(192,121,64,.10) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 80%, rgba(107,58,42,.10) 0%, transparent 55%);
+  }
+
+  .login-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 8px 48px rgba(26,10,0,.13);
+    padding: 48px 44px 40px;
+    width: 100%;
+    max-width: 420px;
+    border-top: 4px solid #c07940;
+    animation: fadeUp .5s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .login-icon {
+    width: 62px; height: 62px;
+    background: #1a0a00;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 1.6rem;
+  }
+
+  .login-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.9rem;
+    color: #3b1f0c;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .login-card .subtitle {
+    text-align: center;
+    color: #7a5c48;
+    font-size: .9rem;
+    margin-bottom: 32px;
+    font-style: italic;
+  }
+
+  .login-card label {
+    font-size: .82rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #6b3a2a;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .login-card input[type="text"],
+  .login-card input[type="password"] {
+    width: 100%;
+    padding: 11px 16px;
+    border: 1.5px solid #e0cfc0;
+    border-radius: 9px;
+    font-size: .95rem;
+    color: #1a0a00;
+    background: #fdf6ec;
+    margin-bottom: 20px;
+    transition: border-color .25s, box-shadow .25s;
+    outline: none;
+  }
+
+  .login-card input:focus {
+    border-color: #c07940;
+    box-shadow: 0 0 0 3px rgba(192,121,64,.18);
+    background: #fff;
+  }
+
+  .login-btn {
+    width: 100%;
+    padding: 13px;
+    background: #1a0a00;
+    color: #f5ead8;
+    border: none;
+    border-radius: 9px;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    cursor: pointer;
+    transition: background .25s, transform .2s;
+    margin-top: 4px;
+  }
+
+  .login-btn:hover {
+    background: #c07940;
+    color: #1a0a00;
+    transform: translateY(-2px);
+  }
+
+  .login-footer {
+    text-align: center;
+    margin-top: 22px;
+    font-size: .88rem;
+    color: #7a5c48;
+  }
+
+  .login-footer a {
+    color: #c07940;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .login-footer a:hover { color: #3b1f0c; }
+
+  .error-msg {
+    background: rgba(192,64,64,.08);
+    border-left: 3px solid #c04040;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: .87rem;
+    color: #8b1a1a;
+    margin-bottom: 18px;
+  }
+
+  .divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 24px 0 20px;
+    color: #b8a090; font-size: .8rem;
+  }
+  .divider::before, .divider::after {
+    content: ''; flex: 1;
+    height: 1px; background: #e0cfc0;
+  }
+</style>
+
+<div class="login-wrapper">
+  <div class="login-card">
+
+    <div class="login-icon">
+      <i class="fas fa-mug-hot" style="color:#c07940;"></i>
     </div>
-    <!-- Include Bootstrap JS and dependencies (optional) -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-</body>
-</html>
+
+    <h2>Welcome Back</h2>
+    <p class="subtitle">Sign in to your coffee account</p>
+
+    {% if form.errors %}
+    <div class="error-msg">
+      <i class="fas fa-exclamation-circle me-2"></i>
+      Incorrect username or password. Please try again.
+    </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+
+      <label for="id_username">Username</label>
+      <input type="text" id="id_username" name="username"
+             placeholder="Enter your username"
+             value="{{ form.username.value|default:'' }}" autofocus>
+
+      <label for="id_password">Password</label>
+      <input type="password" id="id_password" name="password"
+             placeholder="Enter your password">
+
+      {% if next %}
+        <input type="hidden" name="next" value="{{ next }}">
+      {% endif %}
+
+      <button type="submit" class="login-btn">
+        <i class="fas fa-sign-in-alt me-2"></i>Sign In
+      </button>
+    </form>
+
+    <div class="divider">or</div>
+
+    <div class="login-footer">
+      Don't have an account?
+      <a href="/accounts/register/">Create one →</a>
+    </div>
+
+  </div>
+</div>
+{% endblock body %}
