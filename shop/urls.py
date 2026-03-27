@@ -17,4 +17,7 @@ urlpatterns = [
     path('accounts/login/', auth_views.LoginView.as_view(template_name='shop/login.html'), name='login'),
     path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('search/', views.search_products, name='search_products'),
+    path('remove_from_cart/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
+    path('increase_cart/<int:item_id>/', views.increase_cart, name='increase_cart'),
+path('decrease_cart/<int:item_id>/', views.decrease_cart, name='decrease_cart'),
 ]

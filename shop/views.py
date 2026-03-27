@@ -208,3 +208,23 @@ def search_products(request):
     ).values('id', 'product_name', 'price', 'category')[:8]
     
     return JsonResponse({'results': list(products)})
+
+def remove_from_cart(request, item_id):
+    CartItem.objects.filter(id=item_id).delete()
+    return redirect('view_cart')
+
+
+def increase_cart(request, item_id):
+    item = CartItem.objects.get(id=item_id)
+    item.quantity += 1
+    item.save()
+    return redirect('view_cart')
+
+def decrease_cart(request, item_id):
+    item = CartItem.objects.get(id=item_id)
+    if item.quantity > 1:
+        item.quantity -= 1
+        item.save()
+    else:
+        item.delete()  # removes item if quantity hits 0
+    return redirect('view_cart')
