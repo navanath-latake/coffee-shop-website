@@ -9,7 +9,7 @@ from django.http import JsonResponse
 # Create your views here.
 
 def index(request):
-    return render(request, 'shop/index.html')  # FIX: removed unused context variables
+    return render(request, 'shop/index.html')
 
 
 def about(request):
@@ -26,12 +26,10 @@ def contact(request):
         email = request.POST.get('email')
         phone = request.POST.get('phone')
         desc  = request.POST.get('desc')
-        # FIX: Contact is imported from .models not shop.models separately
-        # FIX: removed date=datetime.today() — model uses auto_now_add=True now
         contact_obj = Contact(name=name, email=email, phone=phone, desc=desc)
         contact_obj.save()
         messages.success(request, "Your message has been sent!")
-        return redirect('contact')  # FIX: added redirect after POST to avoid resubmission
+        return redirect('contact')
 
     return render(request, 'shop/contact.html')
 
@@ -48,7 +46,6 @@ def add_to_cart(request, product_id):
 
     cart_quantity = CartItem.objects.filter(cart=cart).count()
 
-    # AJAX request → return JSON (no page reload)
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return JsonResponse({
             'success': True,
@@ -56,7 +53,6 @@ def add_to_cart(request, product_id):
             'cart_quantity': cart_quantity,
         })
 
-    # Normal request → redirect back to referring page
     messages.success(request, f"{product.product_name} added to cart!")
     referer = request.META.get('HTTP_REFERER')
     if referer:
@@ -68,7 +64,6 @@ def add_to_cart(request, product_id):
 def view_cart(request):
     cart, created = Cart.objects.get_or_create(user=request.user)
     cart_items   = CartItem.objects.filter(cart=cart)
-    # FIX: total_price is a @property now, so call without ()
     total_price  = sum(item.total_price for item in cart_items)
 
     return render(request, 'shop/view_cart.html', {
@@ -83,11 +78,10 @@ def place_order(request):
     cart_items = CartItem.objects.filter(cart=cart)
 
     if not cart_items.exists():
-        messages.warning(request, "Your cart is empty!")  # FIX: added message
+        messages.warning(request, "Your cart is empty!")
         return redirect('view_cart')
 
-    if request.method == 'POST':  # FIX: only create order on POST, not on GET
-        # FIX: calculate total before deleting cart items
+    if request.method == 'POST':
         total = sum(item.total_price for item in cart_items)
 
         order = Order.objects.create(
@@ -104,11 +98,9 @@ def place_order(request):
                 price=item.product.price
             )
 
-        cart_items.delete()  # FIX: clear cart after order is created
+        cart_items.delete()
 
         return redirect('add_delivery', order_id=order.id)
-        # FIX: removed the unreachable second return redirect below it
-        # FIX: removed the entire dead if request.method=='POST' block that was after a return
 
     return render(request, 'shop/place_order.html', {'cart_items': cart_items})
 
@@ -123,7 +115,6 @@ def order_detail(request, order_id):
     except Delivery.DoesNotExist:
         delivery = None
 
-    # FIX: moved POST handling BEFORE the return so it actually executes
     if request.method == 'POST':
         action = request.POST.get('action')
 
@@ -175,7 +166,7 @@ def add_delivery(request, order_id):
             delivery       = form.save(commit=False)
             delivery.order = order
             delivery.save()
-            messages.success(request, "Delivery details saved!")  # FIX: added feedback
+            messages.success(request, "Delivery details saved!")
             return redirect('order_detail', order_id=order.id)
     else:
         form = DeliveryForm()
@@ -185,7 +176,6 @@ def add_delivery(request, order_id):
 
 def product_list_by_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
-    # FIX: category field is CharField in Product, so filter by name not object
     products = Product.objects.filter(category=category.name)
     return render(request, 'shop/product_list_by_category.html', {
         'category': category,
@@ -202,29 +192,77 @@ def search_products(request):
     q = request.GET.get('q', '').strip()
     if not q:
         return JsonResponse({'results': []})
-    
+
     products = Product.objects.filter(
         product_name__icontains=q
     ).values('id', 'product_name', 'price', 'category')[:8]
-    
+
     return JsonResponse({'results': list(products)})
 
-def remove_from_cart(request, item_id):
-    CartItem.objects.filter(id=item_id).delete()
-    return redirect('view_cart')
+
+# ── Cart AJAX views ── #
+
+def _cart_json(request, item=None, removed=False):
+    """Helper: build the JSON response after any cart change."""
+    cart      = Cart.objects.get(user=request.user)
+    all_items = CartItem.objects.filter(cart=cart)
+    grand_total = sum(i.total_price for i in all_items)
+    cart_count  = all_items.count()
+
+    if removed:
+        return JsonResponse({
+            'removed':     True,
+            'grand_total': grand_total,
+            'cart_count':  cart_count,
+        })
+
+    return JsonResponse({
+        'removed':      False,
+        'quantity':     item.quantity,
+        'total_price':  item.total_price,
+        'product_name': item.product.product_name,
+        'grand_total':  grand_total,
+        'cart_count':   cart_count,
+    })
 
 
+@login_required
 def increase_cart(request, item_id):
-    item = CartItem.objects.get(id=item_id)
+    item = get_object_or_404(CartItem, id=item_id)
     item.quantity += 1
     item.save()
+
+    # AJAX request → return JSON (no page reload)
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return _cart_json(request, item=item, removed=False)
+
     return redirect('view_cart')
 
+
+@login_required
 def decrease_cart(request, item_id):
-    item = CartItem.objects.get(id=item_id)
+    item = get_object_or_404(CartItem, id=item_id)
+
     if item.quantity > 1:
         item.quantity -= 1
         item.save()
+
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return _cart_json(request, item=item, removed=False)
     else:
-        item.delete()  # removes item if quantity hits 0
+        item.delete()
+
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return _cart_json(request, removed=True)
+
+    return redirect('view_cart')
+
+
+@login_required
+def remove_from_cart(request, item_id):
+    CartItem.objects.filter(id=item_id).delete()
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return _cart_json(request, removed=True)
+
     return redirect('view_cart')
